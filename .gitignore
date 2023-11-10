@@ -2,6 +2,8 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.idea
+OOP_project.iml
 
 ### Eclipse ###
 .apt_generated
