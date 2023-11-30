@@ -1,2 +1,5 @@
-package com.li.oopproject.entities;public class Entity {
+package com.li.oopproject.entities;
+
+public abstract class Entity {
+
 }

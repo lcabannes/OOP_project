@@ -1,2 +1,4 @@
-package com.li.oopproject.entities;public class Alien {
+package com.li.oopproject.entities;
+
+public abstract class Alien extends Entity{
 }

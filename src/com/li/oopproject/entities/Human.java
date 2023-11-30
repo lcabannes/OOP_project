@@ -1,2 +1,4 @@
-package com.li.oopproject.entities;public class Human {
+package com.li.oopproject.entities;
+
+public abstract class Human extends Entity{
 }
