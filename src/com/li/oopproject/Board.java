@@ -20,6 +20,6 @@ public class Board {
             this.exit.entrance = this;
         }
     }
-
+    //test
     
 }
