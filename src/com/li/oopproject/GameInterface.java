@@ -25,7 +25,7 @@ public class GameInterface extends JFrame{
 
         this.add(this.gameScreen);
         try {
-            BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "/assets/Aliens/alien_spacecraft.png"));
+            BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/alien_spacecraft.png"));
             JLabel picLabel = new JLabel(new ImageIcon(myPicture));
             this.add(picLabel);
         }
