@@ -1,4 +1,5 @@
 package com.li.oopproject.entities;
+import com.li.oopproject.Board;
 
 public abstract class Entity {
     //Class Entity variables
@@ -7,7 +8,6 @@ public abstract class Entity {
     private static boolean isGhost = false;
     private int damage;
     private int hp;
-
     private Board board;
 
     public Entity(int damage, int hp, Board board){
@@ -42,8 +42,8 @@ public abstract class Entity {
     }
 
     // Getter for board
-    public int getBoard() {
-        return board;
+    public Board getBoard() {
+        return this.board;
     }
 
     // Setter for damage
@@ -62,7 +62,7 @@ public abstract class Entity {
 
     // Method to reduce hp
     public void reduceHp(int amount) {
-        hp -= amount;
+        this.hp -= amount;
         if (hp <= 0) {
             board.removeEntity(this);
         }
