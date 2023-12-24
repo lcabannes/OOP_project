@@ -15,14 +15,13 @@ public class GameInterface extends JFrame{
     JPanel gameScreen;
 
     public GameInterface() {
-        setSize(640, 640);
+        setSize(800, 800);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         this.gameScreen = new JPanel();
         this.gameScreen.setLayout(new GridLayout(5, 8));
         this.gameScreen.setBackground(Color.BLUE);
-
         this.add(this.gameScreen);
         try {
             BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/alien_spacecraft.png"));

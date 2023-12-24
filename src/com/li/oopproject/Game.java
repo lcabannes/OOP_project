@@ -1,5 +1,7 @@
 package com.li.oopproject;
 
+import javax.swing.*;
+
 public class Game {
     private GameInterface gameInterface;
     private int level;
@@ -7,22 +9,30 @@ public class Game {
     private int waveNum;
     private int mode;
     private Board board;
-    private Player player;
     private int hp = 3;
 
-    public Game(int level, int mode, Board board, Player player){
+    public Game(int level, int mode){
         this.level = level;
         this.currentWave = 0;
-        this.board = board;
-        this.player = player;
+        this.board = new Board();
         this.waveNum = level + 3;
         this.mode = mode;
-        this.gameInterface = new GameInterface();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                gameInterface = new GameInterface();
+            }
+        });
 
         this.startGame();
-        while (!this.gameOver() & !this.gameWon()){
 
-        }
+
+        //    while (!this.gameOver() & !this.gameWon()){
+        //    System.out.println("game launched");
+        // }
+
+
+
     }
 
     public boolean gameOver(){
