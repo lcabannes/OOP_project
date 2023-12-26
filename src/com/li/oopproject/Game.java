@@ -1,5 +1,7 @@
 package com.li.oopproject;
 
+import com.li.oopproject.entities.Alien;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -50,12 +52,18 @@ public class Game {
                     // here several updates, like position update, etc, will be done every TICK
                     int hpLost = board.moveEntities();
                     hp -= hpLost;
+                    EventQueue.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            gameInterface.display();
+                        }
+                    });
                     // TODO
 
                 } else {
                     ((Timer) e.getSource()).stop();  // Stop the timer when the game is finished
                     System.out.println("Game is finished!!!");
-                    return;
+
                 }
             }
         });
@@ -65,9 +73,12 @@ public class Game {
             public void actionPerformed(ActionEvent e) {
                 Random randomInt = new Random();
                 int ySpawnPosition = randomInt.nextInt(Board.height);
-                board.spawnAlien("DefaultAlien", ySpawnPosition); // use spawn() method of Board to spawn a new Zombie
+                Alien alien = board.spawnAlien("DefaultAlien", ySpawnPosition); // use spawn() method of Board to spawn a new Zombie
                 System.out.printf("Hp left: %d\n", hp);
                 board.display();
+                gameInterface.addEntity(alien);
+
+
             }
         });
         alienSpawner.start();

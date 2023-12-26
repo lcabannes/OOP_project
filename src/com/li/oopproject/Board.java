@@ -56,7 +56,7 @@ public class Board {
             }
         }
     }
-    public void spawnAlien(String alienName, int yposition) {
+    public Alien spawnAlien(String alienName, int yposition) {
         // check for which zombie to spawn based on name passed to the method
         Alien newAlien;
         if (alienName.equals("DefaultAlien")) {
@@ -64,12 +64,14 @@ public class Board {
             // set default position of new Zombie to rightmost (each tile is 100 units so rightmost = 100 * tile_num)
             newAlien.setxPos(Board.length * 100);
             newAlien.setyPos(yposition * 100);
+
         } else {
             System.out.println("Tried to spawn unknown zombie name");
-            return;
+            newAlien = new DefaultAlien(this);
+
         }
         this.tiles[yposition][Board.length - 1].aliens.add(newAlien);
-
+        return newAlien;
     }
 
     // check each tile, if it has aliens then print "A"
