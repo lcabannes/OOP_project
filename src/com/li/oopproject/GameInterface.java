@@ -20,11 +20,12 @@ public class GameInterface extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         this.gameScreen = new JPanel();
-        this.gameScreen.setLayout(new GridLayout(5, 8));
+        this.gameScreen.setLayout(new GridLayout(Board.height, Board.length));
         this.gameScreen.setBackground(Color.BLUE);
         this.add(this.gameScreen);
         try {
-            BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/alien_spacecraft.png"));
+            BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/alien_spacecraft.png"));
             JLabel picLabel = new JLabel(new ImageIcon(myPicture));
             this.add(picLabel);
         }
