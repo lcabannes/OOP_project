@@ -1,4 +1,7 @@
 package com.li.oopproject.entities;
+import com.li.oopproject.Board;
+
+import java.awt.image.BufferedImage;
 
 public abstract class Entity {
     //Class Entity variables
@@ -7,8 +10,24 @@ public abstract class Entity {
     private static boolean isGhost = false;
     private int damage;
     private int hp;
-
     private Board board;
+
+    public BufferedImage classIcon; // each entity class must have a picture
+
+    public void setxPos(int xPos) {
+        this.xPos = xPos;
+    }
+
+    public void setyPos(int yPos) {
+        this.yPos = yPos;
+    }
+
+    public int getyPos() {
+        return yPos;
+    }
+
+    private int xPos;
+    private int yPos;
 
     public Entity(int damage, int hp, Board board){
         this.damage = damage;
@@ -42,8 +61,8 @@ public abstract class Entity {
     }
 
     // Getter for board
-    public int getBoard() {
-        return board;
+    public Board getBoard() {
+        return this.board;
     }
 
     // Setter for damage
@@ -62,7 +81,7 @@ public abstract class Entity {
 
     // Method to reduce hp
     public void reduceHp(int amount) {
-        hp -= amount;
+        this.hp -= amount;
         if (hp <= 0) {
             board.removeEntity(this);
         }
@@ -75,5 +94,6 @@ public abstract class Entity {
         return className + "(" + hp + ", " + board + ")";
     }
 
+    public int getxPos(){return this.xPos;}
     //Action mode
 }
