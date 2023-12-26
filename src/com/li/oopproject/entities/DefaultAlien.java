@@ -14,10 +14,11 @@ public class DefaultAlien extends Alien{
     private final static int damage = 10;
 
 
-    static {
+    {
         try{
-            myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+            classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
                     getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/DefaultAlien.png"));
+            classIcon = GameInterface.resizeImage(classIcon, 50, 50);
         }
         catch (IOException e) {
             System.out.println("No image file found for DefaultAlien");

@@ -12,7 +12,7 @@ public abstract class Entity {
     private int hp;
     private Board board;
 
-    public static BufferedImage myPicture; // each entity class must have a picture
+    public BufferedImage classIcon; // each entity class must have a picture
 
     public void setxPos(int xPos) {
         this.xPos = xPos;
