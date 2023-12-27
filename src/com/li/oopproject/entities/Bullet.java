@@ -4,6 +4,6 @@ import com.li.oopproject.Board;
 
 public class Bullet extends Projectile{
     public Bullet(int damage, Board board){
-        super(damage, 20, board);
+        super(damage, 5, board);
     }
 }

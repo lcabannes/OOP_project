@@ -16,4 +16,8 @@ public abstract class Human extends Entity{
     }
 
     public abstract Projectile attack();
+
+    protected void setReloadTimeRemaining(int reloadTime) {
+        reloadTimeRemaining = reloadTime;
+    }
 }

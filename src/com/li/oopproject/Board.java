@@ -56,6 +56,7 @@ public class Board {
      * @param entity
      */
     public void removeEntity(Entity entity){
+        game.getGameInterface().removeEntity(entity);
         for (int row=0; row<height; row++){
             for (int col=0; col<length; col++){
 
@@ -63,6 +64,12 @@ public class Board {
                 if (tile.human == entity){
                     tile.human = null;
                     return;
+                }
+                for (Projectile projectile: tile.projectiles){
+                    if (projectile == entity){
+                        tile.projectiles.remove(projectile);
+                        return;
+                    }
                 }
                 for (Alien alien:tile.aliens){
                         if (alien == entity){
@@ -124,10 +131,11 @@ public class Board {
                     if (tile.human.getReloadTimeRemaining() <= 0){
                         Projectile projectile = tile.human.attack();
                         tile.projectiles.add(projectile);
+                        game.getGameInterface().addEntity(projectile);
                         EventQueue.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                game.getGameInterface().addEntity(projectile);
+
                             }
                         });
                     }
@@ -152,8 +160,63 @@ public class Board {
                         i++;
                     }
                 }
+                int j = 0;
+                while (j < tile.projectiles.size()){
+                    Projectile projectile = tile.projectiles.get(j);
+                    projectile.move();
+              //      System.out.println("projectile at y : " + projectile.getyPos() + "x: " + projectile.getxPos());
+                    if (projectile.getxPos() >= 800){
+                        removeEntity(projectile);
+                    }
+                    else if (projectile.getxPos() >= (col+1) * 100){
+                        tile.projectiles.remove(projectile);
+                        tiles[row][col+1].projectiles.add(projectile);
+                    }
+                    else{
+                        j++;
+                    }
+                }
             }
         }
         return hpLost;
+    }
+
+    public void checkCollisions(){
+        for (int row = 0; row < Board.height; row++) {
+            for (int col = 0; col < Board.length; col++) {
+                // reload the human
+                Tile tile = tiles[row][col];
+                int i = 0;
+                while (i < tile.projectiles.size()){
+                    Projectile projectile = tile.projectiles.get(i);
+                    ArrayList<Alien> aliensToConsider = new ArrayList<Alien>();
+                    aliensToConsider.addAll(tile.aliens);
+                    if (col+1 < Board.length){
+                        aliensToConsider.addAll(tiles[row][col+1].aliens);
+                    }
+                    Alien closestAlien = null;
+                    int closestDist = 10000; // set an initial distance to infinite
+                    for (Alien alien:aliensToConsider){
+                        int dist = alien.getxPos() - projectile.getxPos();
+                        if (Math.abs(dist) < 50 & dist < closestDist){
+                            closestAlien = alien;
+                            closestDist = dist;
+                        }
+                    }
+                    if (closestAlien != null){
+                        closestAlien.reduceHp(projectile.getDamage());
+                        if (!closestAlien.isAlive()){
+                            removeEntity(closestAlien);
+                        }
+                        projectile.reduceHp(1);
+                        if (!projectile.isAlive()){
+                            removeEntity(projectile);
+                            i--;
+                        }
+                    }
+                    i++;
+                }
+            }
+        }
     }
 }

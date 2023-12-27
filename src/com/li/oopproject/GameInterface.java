@@ -10,8 +10,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +25,7 @@ public class GameInterface extends JFrame{
     private JPanel backGroundPanel;
     private JPanel foreGroundPanel;
     private ArrayList<Entity> displayedEntities = new ArrayList<>();
+    private Human clickedIcon = null;
     public GameInterface(Game game) {
         this.game = game;
         setSize(800, 600);
@@ -34,6 +34,11 @@ public class GameInterface extends JFrame{
         layeredPane.setPreferredSize(new Dimension(800, 600));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        Human DefaultHumanButton = new DefaultHuman(game.getBoard());
+        DefaultHumanButton.setyPos(-100);
+        DefaultHumanButton.setxPos(0);
+        displayedEntities.add(DefaultHumanButton);
         // button panels contains transparent buttons and one additional row to choose which human to select to place
         // TODO: top selection row
         buttonPanel = new JPanel();
@@ -43,21 +48,55 @@ public class GameInterface extends JFrame{
         for (int i=0; i< Board.height+1; i++){
             for (int j=0; j<Board.length; j++){
                 // use effectively final variables to allow the actionListener to know its position
-                final int finalI = i-1;
+                final int finalI = i;
                 final int finalJ = j;
                 JButton button = new JButton();
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (finalI >= 0) {
+                        if (finalI > 0) {
                             // when clicked try to place a human at this position, message the user about the outcome
-                            if (game.placeHuman(new DefaultHuman(game.getBoard()), finalI, finalJ)) {
-                                System.out.println("Successfully place a turret at: " + finalI + " " + finalJ);
-                            } else {
-                                System.out.println("You cannot place this turret here");
+                            if (clickedIcon != null) {
+                                if (game.placeHuman(clickedIcon, (finalI - 1), finalJ)) {
+                                    System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
+                                } else {
+                                    System.out.println("You cannot place this turret here");
+                                }
+                                displayedEntities.remove(clickedIcon);
+                                clickedIcon = null;
+                            }
+                        }
+                        else{
+                            displayedEntities.remove(clickedIcon);
+                            clickedIcon = null;
+                            if (finalJ == 0){
+                                System.out.println("selected DefaultHuman");
+                                clickedIcon = new DefaultHuman(game.getBoard());
+                                clickedIcon.setxPos(0);
+                                clickedIcon.setyPos(-100);
+                                displayedEntities.add(clickedIcon);
                             }
                         }
                     }
+                });
+
+                button.addMouseMotionListener(new MouseMotionListener() {
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+                        if (clickedIcon != null){
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * 100));
+                            clickedIcon.setxPos(e.getX() + (finalJ * 100));
+                        }
+                    }
+
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                        if (clickedIcon != null){
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * 100));
+                            clickedIcon.setxPos(e.getX() + (finalJ * 100));
+                        }
+                    }
+
                 });
                 // Set the button's background color to transparent
                 button.setBackground(new Color(0, 0, 0, 0)); // Transparent color (alpha = 0)
@@ -68,6 +107,7 @@ public class GameInterface extends JFrame{
         }
         // background panel to hold the background image
         backGroundPanel = new JPanel();
+
 
         try {
             BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
@@ -99,7 +139,9 @@ public class GameInterface extends JFrame{
         layeredPane.add(backGroundPanel, Integer.valueOf(1));
         layeredPane.add(foreGroundPanel, Integer.valueOf(2));
         layeredPane.add(buttonPanel, Integer.valueOf(3));
+
         //add layeredPane to main GameInterface
+
         this.add(layeredPane);
         setResizable(false);
         setVisible(true);
@@ -123,7 +165,9 @@ public class GameInterface extends JFrame{
     public void display(){
         // remove all Entities (because they have changed position but also appearance (red/attacking/damaged)
         foreGroundPanel.removeAll();
+        foreGroundPanel.setDoubleBuffered(true);
         foreGroundPanel.repaint(); // repaint to clear background
+
         int i = 0;
         while (i < displayedEntities.size()){
             Entity entity = displayedEntities.get(i);
@@ -148,5 +192,9 @@ public class GameInterface extends JFrame{
             i++;
         }
 
+    }
+
+    public void removeEntity(Entity entity){
+        displayedEntities.remove(entity);
     }
 }

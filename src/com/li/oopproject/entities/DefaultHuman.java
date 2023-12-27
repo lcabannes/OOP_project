@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class DefaultHuman extends Human {
-    private final static int reloadTime = 1000;  // reload delay in ms
+    private final static int reloadTime = 2000;  // reload delay in ms
 
     private final static int maxHP = 100;
     private final static int damage = 10;
@@ -31,6 +31,7 @@ public class DefaultHuman extends Human {
 
 
     public Projectile attack(){
+        this.setReloadTimeRemaining(reloadTime);
         Projectile bullet = new Bullet(damage, this.getBoard());
         bullet.setxPos(this.getxPos()+50);
         bullet.setyPos(this.getyPos());

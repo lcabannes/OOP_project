@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class Game {
-    private final static int TICKDELAY = 50; // delay between each game-state update in the game
+    private final static int TICKDELAY = 30; // delay between each game-state update in the game
 
 
 

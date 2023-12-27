@@ -105,4 +105,8 @@ public abstract class Entity {
 
     public int getxPos(){return this.xPos;}
     //Action mode
+
+    public boolean isAlive(){
+        return hp>0;
+    }
 }
