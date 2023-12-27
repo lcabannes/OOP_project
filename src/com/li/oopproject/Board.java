@@ -1,4 +1,5 @@
 package com.li.oopproject;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.li.oopproject.entities.*;
@@ -12,9 +13,11 @@ public class Board {
     private Human human;
     public static final int length = 8; // fixed length for all Boards
     public static final int height = 5; // fixed height for all board
+    private final Game game;
 
-    public Board(){
+    public Board(Game game){
         this.name = "default_board";
+        this.game = game;
         for (int row = 0; row < Board.height; row++){
             for (int col = 0; col<Board.length; col++){
                 this.tiles[row][col] = new Tile();
@@ -26,11 +29,26 @@ public class Board {
         private ArrayList<Alien> aliens;
         private Human human;
 
+        private ArrayList<Projectile> projectiles;
+
         public Tile() { // Aliens are stored in each tile
             this.aliens = new ArrayList<Alien>();
             this.human = null;
+            this.projectiles = new ArrayList<Projectile>();
 
         }
+    }
+    // return true if a human was place, false otherwise
+    public boolean placeHuman(Human human, int row, int col){
+        if (tiles[row][col].human != null){
+            return false;
+        }
+        human.setxPos(col*100);
+        human.setyPos(row*100);
+        tiles[row][col].human = human;
+
+
+        return true;
     }
 
     /**
@@ -93,25 +111,41 @@ public class Board {
         System.out.printf("\n");
     }
 
-    public int moveEntities(){
+    public int updateEntities(int elapsedTime){
         // this method returns how many aliens have passed the final line after moving this update
+        // it also reloads all the humans guns
         int hpLost = 0;
         for (int row = 0; row < Board.height; row++){
             for (int col = 0; col<Board.length; col++){
+                // reload the human
+                Tile tile = tiles[row][col];
+                if (tile.human!=null){
+                    tile.human.reload(elapsedTime);
+                    if (tile.human.getReloadTimeRemaining() <= 0){
+                        Projectile projectile = tile.human.attack();
+                        tile.projectiles.add(projectile);
+                        EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                game.getGameInterface().addEntity(projectile);
+                            }
+                        });
+                    }
+                }
                 int i = 0;
-                while (i < tiles[row][col].aliens.size()) {
-                    Alien alien = tiles[row][col].aliens.get(i);
+                while (i < tile.aliens.size()) {
+                    Alien alien = tile.aliens.get(i);
                     alien.move();
                     // if an Alien's position is negative it means it breached the Human's defense and
                     // one HP should be deducted from the player's HP
                     if (alien.getxPos() < 0){
                         hpLost++;
-                        tiles[row][col].aliens.remove(alien);
+                        tile.aliens.remove(alien);
                     }
                     // if an Alien's position is less than it should be given its current tile, we remove it
                     // we move it to the tile on the left
                     else if (alien.getxPos() < col * 100){
-                        tiles[row][col].aliens.remove(alien);
+                        tile.aliens.remove(alien);
                         tiles[row][col-1].aliens.add(alien);
                     }
                     else{

@@ -12,7 +12,16 @@ public abstract class Entity {
     private int hp;
     private Board board;
 
-    public BufferedImage classIcon; // each entity class must have a picture
+    public void setClassIcon(BufferedImage classIcon) {
+        this.classIcon = classIcon;
+    }
+
+    private BufferedImage classIcon; // each entity class must have a picture
+
+    public BufferedImage getClassIcon() {
+        return classIcon;
+    }
+
 
     public void setxPos(int xPos) {
         this.xPos = xPos;
@@ -26,8 +35,8 @@ public abstract class Entity {
         return yPos;
     }
 
-    private int xPos;
-    private int yPos;
+    private int xPos = 0;
+    private int yPos = 0;
 
     public Entity(int damage, int hp, Board board){
         this.damage = damage;

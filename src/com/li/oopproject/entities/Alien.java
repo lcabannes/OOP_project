@@ -1,9 +1,9 @@
 package com.li.oopproject.entities;
 import com.li.oopproject.Board;
 
-public abstract class Alien extends Entity implements Movable{
+public abstract class Alien extends Entity implements Mobile{
 
-    int speed; // how much will an alien move left each update
+    private final int speed; // how much will an alien move left each update
     public Alien(int hp, int damage, Board board, int speed){ // aliens all move so they have a speed
         super(hp, damage, board);
         this.speed = speed; // since all aliens move they all have a certain speed
