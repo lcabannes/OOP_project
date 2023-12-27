@@ -1,6 +1,7 @@
 package com.li.oopproject;
 
 import com.li.oopproject.entities.Alien;
+import com.li.oopproject.entities.Human;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,9 @@ import java.util.Random;
 
 public class Game {
     private final static int TICKDELAY = 50; // delay between each game-state update in the game
+
+
+
     private GameInterface gameInterface;
     private int level;
     private int currentWave;
@@ -18,17 +22,21 @@ public class Game {
     private Board board;
     private int hp = 3;
 
+    public Board getBoard() {
+        return board;
+    }
+
     public Game(int level, int mode){
         this.level = level;
         this.currentWave = 0;
-        this.board = new Board();
+        this.board = new Board(this);
         this.waveNum = level + 3;
         this.mode = mode;
         // use the eventQueue invoke later to execute the Graphical interface update in the EDT
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                gameInterface = new GameInterface();
+                gameInterface = new GameInterface(Game.this);
             }
 
         });
@@ -49,9 +57,11 @@ public class Game {
                 // Game loop logic
                 if (!Game.this.isGameOver() & !Game.this.isGameWon()) {
 
-                    // here several updates, like position update, etc, will be done every TICK
-                    int hpLost = board.moveEntities();
+                    // here several updates, like position update, etc..., will be done every TICK
+                    int hpLost = board.updateEntities(TICKDELAY);
+
                     hp -= hpLost;
+                    // use evenQueue to update the display in a thread-safe manner
                     EventQueue.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -67,7 +77,9 @@ public class Game {
                 }
             }
         });
-        baseTimer.start(); // create a base clock that will update the game state every TICKDELAY miliseconds
+        baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
+
+        // define a baisc alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
         Timer alienSpawner = new Timer(8000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,11 +90,22 @@ public class Game {
                 board.display();
                 gameInterface.addEntity(alien);
 
-
             }
         });
         alienSpawner.start();
 
     }
 
+    public boolean placeHuman(Human human, int row, int col){
+
+        if (board.placeHuman(human, row, col)){
+            gameInterface.addEntity(human);
+            return true;
+        }
+        return false;
+    }
+
+    public GameInterface getGameInterface() {
+        return gameInterface;
+    }
 }
