@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class DefaultAlien extends Alien{
-    private final static int maxHP = 100;
+    private final static int maxHP = 50;
     private final static int speed = 1;
     private final static int damage = 10;
 

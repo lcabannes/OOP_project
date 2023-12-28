@@ -56,6 +56,8 @@ public class Board {
      * @param entity
      */
     public void removeEntity(Entity entity){
+        game.getGameInterface().removeEntity(entity);
+        // search for said entity in all tiles and all entity fields of those tiles, stop when we find it
         for (int row=0; row<height; row++){
             for (int col=0; col<length; col++){
 
@@ -63,6 +65,12 @@ public class Board {
                 if (tile.human == entity){
                     tile.human = null;
                     return;
+                }
+                for (Projectile projectile: tile.projectiles){
+                    if (projectile == entity){
+                        tile.projectiles.remove(projectile);
+                        return;
+                    }
                 }
                 for (Alien alien:tile.aliens){
                         if (alien == entity){
@@ -117,21 +125,25 @@ public class Board {
         int hpLost = 0;
         for (int row = 0; row < Board.height; row++){
             for (int col = 0; col<Board.length; col++){
-                // reload the human
+
                 Tile tile = tiles[row][col];
+                // if there is a human in this tile, reload the human
                 if (tile.human!=null){
+
                     tile.human.reload(elapsedTime);
                     if (tile.human.getReloadTimeRemaining() <= 0){
                         Projectile projectile = tile.human.attack();
                         tile.projectiles.add(projectile);
+                        game.getGameInterface().addEntity(projectile);
                         EventQueue.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                game.getGameInterface().addEntity(projectile);
+
                             }
                         });
                     }
                 }
+                // make all the aliens move
                 int i = 0;
                 while (i < tile.aliens.size()) {
                     Alien alien = tile.aliens.get(i);
@@ -141,6 +153,7 @@ public class Board {
                     if (alien.getxPos() < 0){
                         hpLost++;
                         tile.aliens.remove(alien);
+                        game.getGameInterface().removeEntity(alien);
                     }
                     // if an Alien's position is less than it should be given its current tile, we remove it
                     // we move it to the tile on the left
@@ -152,8 +165,72 @@ public class Board {
                         i++;
                     }
                 }
+                // make all the projectiles move
+                int j = 0;
+                while (j < tile.projectiles.size()){
+                    Projectile projectile = tile.projectiles.get(j);
+                    projectile.move();
+
+                    if (projectile.getxPos() >= 800){
+                        removeEntity(projectile);
+                    }
+                    // if a projectile has crossed a tile boundary, move it to the next tile, eventually,
+                    // all projectiles should maybe be stored as a single list for each row, not each Tile, altough
+                    // it might be fine as is
+                    else if (projectile.getxPos() >= (col+1) * 100){
+                        tile.projectiles.remove(projectile);
+                        tiles[row][col+1].projectiles.add(projectile);
+                    }
+                    else{
+                        j++;
+                    }
+                }
             }
         }
         return hpLost;
+    }
+
+    public void checkCollisions(){
+
+        for (int row = 0; row < Board.height; row++) {
+            for (int col = 0; col < Board.length; col++) {
+
+                Tile tile = tiles[row][col];
+                int i = 0;
+                // for each projectile, search for the closest alien it is touching, assuming entities have a hitbox
+                // size of 50 -> this needs to become a constant like HITBOXSIZE, also, check for aliens in the next
+                // tile so that it doesn't miss it by crossing each other without touching at the next iteration
+                while (i < tile.projectiles.size()){
+                    Projectile projectile = tile.projectiles.get(i);
+                    ArrayList<Alien> aliensToConsider = new ArrayList<Alien>();
+                    aliensToConsider.addAll(tile.aliens);
+                    if (col+1 < Board.length){
+                        aliensToConsider.addAll(tiles[row][col+1].aliens);
+                    }
+                    Alien closestAlien = null;
+                    int closestDist = 10000; // set an initial distance to infinite
+                    for (Alien alien:aliensToConsider){
+                        int dist = alien.getxPos() - projectile.getxPos();
+                        if (Math.abs(dist) < 50 & dist < closestDist){
+                            closestAlien = alien;
+                            closestDist = dist;
+                        }
+                    }
+                    // if the projectile is touching an alien, damage it and remove the dead entities
+                    if (closestAlien != null){
+                        closestAlien.reduceHp(projectile.getDamage());
+                        if (!closestAlien.isAlive()){
+                            removeEntity(closestAlien);
+                        }
+                        projectile.reduceHp(1);
+                        if (!projectile.isAlive()){
+                            removeEntity(projectile);
+                            i--;
+                        }
+                    }
+                    i++;
+                }
+            }
+        }
     }
 }

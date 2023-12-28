@@ -38,7 +38,7 @@ public abstract class Entity {
     private int xPos = 0;
     private int yPos = 0;
 
-    public Entity(int damage, int hp, Board board){
+    public Entity(int hp, int damage, Board board){
         this.damage = damage;
         this.hp = hp;
         this.board = board;
@@ -100,9 +100,13 @@ public abstract class Entity {
     @Override
     public String toString() {
         String className = getClass().getSimpleName();
-        return className + "(" + hp + ", " + board + ")";
+        return className + " (hp: " + hp + ")";
     }
 
     public int getxPos(){return this.xPos;}
     //Action mode
+
+    public boolean isAlive(){
+        return hp>0;
+    }
 }
