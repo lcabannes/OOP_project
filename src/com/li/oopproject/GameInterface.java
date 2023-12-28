@@ -108,6 +108,7 @@ public class GameInterface extends JFrame{
                 button.setBackground(new Color(0, 0, 0, 0)); // Transparent color (alpha = 0)
                 // Make the button's content area transparent
                 button.setOpaque(false);
+                button.setBorder(null); // set no border for aesthetics
                 buttonPanel.add(button);
             }
         }

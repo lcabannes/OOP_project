@@ -17,7 +17,7 @@ public class Main {
 
     }
     public static void startGame(){
-        Game game = new Game(1, 0);
+        Game game = new Game(0, 0);
         game.startGame();
     }
 }

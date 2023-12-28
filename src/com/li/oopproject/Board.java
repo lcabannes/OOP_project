@@ -94,7 +94,6 @@ public class Board {
         } else {
             System.out.println("Tried to spawn unknown zombie name");
             newAlien = new DefaultAlien(this);
-
         }
         this.tiles[yposition][Board.length - 1].aliens.add(newAlien);
         return newAlien;
@@ -102,10 +101,13 @@ public class Board {
 
     // check each tile, if it has aliens then print "A"
     public void display(){
-        System.out.println("Current Board: \n");
+        System.out.println("Current Board:");
         for (int row = 0; row < Board.height; row++){
             for (int col = 0; col<Board.length; col++){
-                if (this.tiles[row][col].aliens.isEmpty()){
+                if (this.tiles[row][col].human != null){
+                    System.out.printf("|H");
+                }
+                else if (this.tiles[row][col].aliens.isEmpty()){
                     System.out.printf("|_");
                 }
                 else{
@@ -116,7 +118,6 @@ public class Board {
             }
             System.out.printf("|\n");
         }
-        System.out.printf("\n");
     }
 
     public int updateEntities(int elapsedTime){
@@ -232,5 +233,21 @@ public class Board {
                 }
             }
         }
+    }
+    public boolean noAlien(){
+        for (int row = 0; row < height; row++){
+            if (!noAlien(row)){
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean noAlien(int row){
+        for (Tile tile:tiles[row]){
+            if (!tile.aliens.isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 }
