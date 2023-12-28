@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameInterface extends JFrame{
-
+    public static final int WINDOWLENGTH = 800;
+    public static final int WINDOWHEIGHT = 600;
+    public static final int TILESIZE = 100;
     private Game game;
     private JPanel buttonPanel;
     private JPanel backGroundPanel;
@@ -28,15 +30,15 @@ public class GameInterface extends JFrame{
     private Human clickedIcon = null;
     public GameInterface(Game game) {
         this.game = game;
-        setSize(800, 600);
+        setSize(WINDOWLENGTH, WINDOWHEIGHT);
         // use a layered Pane to deal with the different layers of panels
         JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(800, 600));
+        layeredPane.setPreferredSize(new Dimension(WINDOWLENGTH, WINDOWHEIGHT));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         Human DefaultHumanButton = new DefaultHuman(game.getBoard());
-        DefaultHumanButton.setyPos(-100);
+        DefaultHumanButton.setyPos(-TILESIZE);
         DefaultHumanButton.setxPos(0);
         displayedEntities.add(DefaultHumanButton);
         // button panels contains transparent buttons and one additional row to choose which human to select to place
@@ -73,7 +75,7 @@ public class GameInterface extends JFrame{
                                 System.out.println("selected DefaultHuman");
                                 clickedIcon = new DefaultHuman(game.getBoard());
                                 clickedIcon.setxPos(0);
-                                clickedIcon.setyPos(-100);
+                                clickedIcon.setyPos(-TILESIZE);
                                 displayedEntities.add(clickedIcon);
                             }
                         }
@@ -84,16 +86,20 @@ public class GameInterface extends JFrame{
                     @Override
                     public void mouseDragged(MouseEvent e) {
                         if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * 100));
-                            clickedIcon.setxPos(e.getX() + (finalJ * 100));
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
                         }
                     }
 
+                    // the finalI-1 comes from the fact that we are giving position to entities based on the
+                    // the board but there is an aditional row of buttons in the graphical interface
+                    // so the indexation is different, the positions also, we might want to armonize
+                    // the position later
                     @Override
                     public void mouseMoved(MouseEvent e) {
                         if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * 100));
-                            clickedIcon.setxPos(e.getX() + (finalJ * 100));
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
                         }
                     }
 
@@ -108,7 +114,7 @@ public class GameInterface extends JFrame{
         // background panel to hold the background image
         backGroundPanel = new JPanel();
 
-
+        // try to load the backGround image
         try {
             BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
                     getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/Background1.png"));
@@ -119,21 +125,24 @@ public class GameInterface extends JFrame{
             System.out.println("No file found");
             return;
         }
+        // initialize a layered pane which will contain the backgroundPanel, ForeGround panel and Button Panel
+        layeredPane.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
+
         // foreground panel is where all entities are placed
         foreGroundPanel = new JPanel();
         foreGroundPanel.setBackground(new Color(0, 0, 0, 0));
         foreGroundPanel.setOpaque(false);
         foreGroundPanel.setLayout(null);
         //set all bounds of panels to the same so that they do overlap
-        backGroundPanel.setBounds(0, 0, 800, 600);
-        layeredPane.setBounds(0, 0, 800, 600);
+        backGroundPanel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
+
 
         // Set bounds and other properties for the buttonPanel
-        buttonPanel.setBounds(0, 0, 800, 600); // Set the size and position
+        buttonPanel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT); // Set the size and position
         // ... [Button initialization and adding to buttonPanel]
 
         // Set bounds and other properties for the foreGroundPanel
-        foreGroundPanel.setBounds(0, 0, 800, 600);
+        foreGroundPanel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
 
         // add all panels to the layeredPane in order (lowest value = lowest panel)
         layeredPane.add(backGroundPanel, Integer.valueOf(1));
@@ -174,18 +183,16 @@ public class GameInterface extends JFrame{
             // if an entity has passed all defenses stop displaying it
             // TODO: change this so that it is the Game class/board class that removes entities
             //  that should no longer be tracked
-            if (entity.getxPos() < 0){
-                displayedEntities.remove(i);
-                continue;
-            }
+
             BufferedImage entityIcon = entity.getClassIcon();
             // otherwise display it
             if (entityIcon != null) {
                 JLabel imageLabel = new JLabel(new ImageIcon(entityIcon));
-                imageLabel.setOpaque(false);
+                //idk if the next line is useful or not, might need more testing
+             //   imageLabel.setOpaque(false);
                 foreGroundPanel.add(imageLabel);
                 //place it at its current position
-                imageLabel.setBounds(entity.getxPos(), entity.getyPos()+100, entityIcon.getWidth(), entityIcon.getHeight());
+                imageLabel.setBounds(entity.getxPos(), entity.getyPos()+TILESIZE, entityIcon.getWidth(), entityIcon.getHeight());
             } else {
                 System.out.println("Failed to load the image.");
             }
@@ -193,7 +200,7 @@ public class GameInterface extends JFrame{
         }
 
     }
-
+    //stop tracking an entity
     public void removeEntity(Entity entity){
         displayedEntities.remove(entity);
     }

@@ -23,8 +23,8 @@ public abstract class Projectile extends Entity implements Mobile{
 
     // projectiles have 1hp right now but maybe we can make projectiles with more hp so that they can
     // last longer if we want to
-    public Projectile(int damage, int speed, Board board){
-        super(1, damage, board);
+    public Projectile(int maxHP, int damage, int speed, Board board){
+        super(maxHP, damage, board);
         this.speed = speed;
     }
     public void move(){

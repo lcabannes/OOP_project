@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class Game {
-    private final static int TICKDELAY = 30; // delay between each game-state update in the game
+    private final static int TICKDELAY = 20; // delay between each game-state update in the game
 
 
 
@@ -59,8 +59,8 @@ public class Game {
 
                     // here several updates, like position update, etc..., will be done every TICK
                     int hpLost = board.updateEntities(TICKDELAY);
-
                     hp -= hpLost;
+                    board.checkCollisions();
                     // use evenQueue to update the display in a thread-safe manner
                     EventQueue.invokeLater(new Runnable() {
                         @Override
