@@ -12,15 +12,18 @@ import java.util.Random;
 public class Game {
     private final static int TICKDELAY = 20; // delay between each game-state update in the game
 
-
-
+    private final static int[] waveDuration = {10000, 20000, 20000}; // waves duration in ms
+    private int timeSinceWaveStart = 0;
     private GameInterface gameInterface;
+    private boolean VERBOSE = true;
     private int level;
     private int currentWave;
     private int waveNum;
     private int mode;
     private Board board;
     private int hp = 3;
+
+    private Timer DefaultAlienSpawner;
 
     public Board getBoard() {
         return board;
@@ -41,6 +44,19 @@ public class Game {
 
         });
 
+        // define a basic alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
+        // and prints the board every time
+        DefaultAlienSpawner = new Timer(8000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                spawnAlien("DefaultAlien");
+                if (VERBOSE){
+                    System.out.printf("Hp left: %d\n", hp);
+                    board.display();
+                }
+            }
+        });
+
     }
 
     public boolean isGameOver(){
@@ -51,51 +67,36 @@ public class Game {
     }
     public void startGame(){
         System.out.println("Game Starting");
+
+
         Timer baseTimer = new Timer(TICKDELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Game loop logic
-                if (!Game.this.isGameOver() & !Game.this.isGameWon()) {
 
-                    // here several updates, like position update, etc..., will be done every TICK
-                    int hpLost = board.updateEntities(TICKDELAY);
-                    hp -= hpLost;
-                    board.checkCollisions();
-                    // use evenQueue to update the display in a thread-safe manner
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            gameInterface.display();
-                        }
-                    });
-                    // TODO
-
-                } else {
+                updateGame();
+                if (isGameOver() || isGameWon()) {
                     ((Timer) e.getSource()).stop();  // Stop the timer when the game is finished
-                    System.out.println("Game is finished!!!");
+                    if (isGameOver()){
+                        System.out.println("You lost!");
+                    }
+                    if (isGameWon()){
+                        System.out.println("you won!!!");
+                    }
 
                 }
             }
         });
+
         baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
 
-        // define a baisc alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
-        Timer alienSpawner = new Timer(8000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Random randomInt = new Random();
-                int ySpawnPosition = randomInt.nextInt(Board.height);
-                Alien alien = board.spawnAlien("DefaultAlien", ySpawnPosition); // use spawn() method of Board to spawn a new Zombie
-                System.out.printf("Hp left: %d\n", hp);
-                board.display();
-                gameInterface.addEntity(alien);
-
-            }
-        });
-        alienSpawner.start();
-
     }
+    public void spawnAlien(String name){
+        Random randomInt = new Random();
+        int ySpawnPosition = randomInt.nextInt(Board.height);
+        Alien alien = board.spawnAlien(name, ySpawnPosition); // use spawn() method of Board to spawn a new Zombie
 
+        gameInterface.addEntity(alien);
+    }
     public boolean placeHuman(Human human, int row, int col){
 
         if (board.placeHuman(human, row, col)){
@@ -105,6 +106,44 @@ public class Game {
         return false;
     }
 
+    public void updateGame(){
+        // Game logic
+        // keep track of time elapsed to know when to end a wave
+        if (timeSinceWaveStart == 0){
+            if (currentWave == 1){
+                DefaultAlienSpawner.setDelay(4000);
+
+            }
+            if (currentWave == 2){
+                DefaultAlienSpawner.setDelay(2000);
+            }
+            DefaultAlienSpawner.start();
+        }
+
+        // here several updates, like position update, etc..., will be done every TICK
+        int hpLost = board.updateEntities(TICKDELAY);
+        hp -= hpLost;
+        board.checkCollisions();
+        // use evenQueue to update the display in a thread-safe manner
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                gameInterface.display();
+            }
+        });
+        // TODO
+
+        timeSinceWaveStart += TICKDELAY;
+        if (timeSinceWaveStart >= waveDuration[currentWave]){
+            DefaultAlienSpawner.stop();
+            if (board.noAlien()){
+                System.out.println("Good job, you finished Wave " + currentWave);
+                timeSinceWaveStart = 0;
+                currentWave += 1;
+            }
+
+        }
+    }
     public GameInterface getGameInterface() {
         return gameInterface;
     }
