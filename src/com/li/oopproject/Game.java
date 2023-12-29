@@ -49,8 +49,8 @@ public class Game {
         DefaultAlienSpawner = new Timer(8000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                spawnAlien("DefaultAlien");
-                if (VERBOSE){
+                spawnAlien(); // Now chooses alien type based on the wave
+                if (VERBOSE) {
                     System.out.printf("Hp left: %d\n", hp);
                     board.display();
                 }
@@ -90,13 +90,29 @@ public class Game {
         baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
 
     }
-    public void spawnAlien(String name){
+    public void spawnAlien() {
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
-        Alien alien = board.spawnAlien(name, ySpawnPosition); // use spawn() method of Board to spawn a new Zombie
+        Alien alien;
+
+        //spawn OctopusAlien in wave 1
+        //spawn OctopusAlien, GhostAlien in wave 2
+        //spawn OctopusAlien, GhostAlien, AlienShip in wave 3
+        if (currentWave == 1) {
+            alien = board.spawnAlien("OctopusAlien", ySpawnPosition);
+        } else if (currentWave == 2) {
+            String[] aliens = {"OctopusAlien", "GhostAlien"};
+            alien = board.spawnAlien(aliens[randomInt.nextInt(aliens.length)], ySpawnPosition);
+        } else if (currentWave >= 3) {
+            String[] aliens = {"OctopusAlien", "GhostAlien", "AlienShip"};
+            alien = board.spawnAlien(aliens[randomInt.nextInt(aliens.length)], ySpawnPosition);
+        } else {
+            alien = board.spawnAlien("DefaultAlien", ySpawnPosition);
+        }
 
         gameInterface.addEntity(alien);
     }
+
     public boolean placeHuman(Human human, int row, int col){
 
         if (board.placeHuman(human, row, col)){
@@ -123,7 +139,7 @@ public class Game {
         // here several updates, like position update, etc..., will be done every TICK
         int hpLost = board.updateEntities(TICKDELAY);
         hp -= hpLost;
-        board.checkCollisions();
+
         // use evenQueue to update the display in a thread-safe manner
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -148,3 +164,4 @@ public class Game {
         return gameInterface;
     }
 }
+

@@ -1,19 +1,17 @@
 package com.li.oopproject;
 
-import com.li.oopproject.entities.Alien;
 import com.li.oopproject.entities.DefaultHuman;
 import com.li.oopproject.entities.Entity;
 import com.li.oopproject.entities.Human;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,8 +122,8 @@ public class GameInterface extends JFrame{
         }
         catch (IOException e) {
             System.out.println("No file found");
-            return;
         }
+
         // initialize a layered pane which will contain the backgroundPanel, ForeGround panel and Button Panel
         layeredPane.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
 
@@ -176,6 +174,7 @@ public class GameInterface extends JFrame{
         // remove all Entities (because they have changed position but also appearance (red/attacking/damaged)
         foreGroundPanel.removeAll();
         foreGroundPanel.setDoubleBuffered(true);
+
         foreGroundPanel.repaint(); // repaint to clear background
 
         int i = 0;
@@ -190,7 +189,7 @@ public class GameInterface extends JFrame{
             if (entityIcon != null) {
                 JLabel imageLabel = new JLabel(new ImageIcon(entityIcon));
                 //idk if the next line is useful or not, might need more testing
-             //   imageLabel.setOpaque(false);
+                //   imageLabel.setOpaque(false);
                 foreGroundPanel.add(imageLabel);
                 //place it at its current position
                 imageLabel.setBounds(entity.getxPos(), entity.getyPos()+TILESIZE, entityIcon.getWidth(), entityIcon.getHeight());
@@ -206,3 +205,4 @@ public class GameInterface extends JFrame{
         displayedEntities.remove(entity);
     }
 }
+
