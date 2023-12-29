@@ -51,7 +51,7 @@ public class Board {
         }
     }
 
-    // return true if a human was place, false otherwise
+    // Return true if a human was place, false otherwise
     public boolean placeHuman(Human human, int row, int col) {
         if (tiles[row][col].human != null) {
             return false;
@@ -59,15 +59,12 @@ public class Board {
         human.setxPos(col * 100);
         human.setyPos(row * 100);
         tiles[row][col].human = human;
-
-
         return true;
     }
 
     /**
      * check for every tile to find the entity to erase
      *
-     * @param entity
      */
     public void removeEntity(Entity entity) {
         game.getGameInterface().removeEntity(entity);

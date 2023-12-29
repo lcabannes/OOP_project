@@ -16,8 +16,10 @@ public class Main {
 
 
     }
-    public static void startGame(){
-        Game game = new Game(0, 0);
+
+    public static void startGame(int selectedMode){
+        System.out.println("Mode value before constructor call: " + selectedMode);
+        Game game = new Game(0, selectedMode);
         game.startGame();
     }
 }

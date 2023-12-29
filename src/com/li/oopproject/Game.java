@@ -12,18 +12,22 @@ import java.util.Random;
 public class Game {
     private final static int TICKDELAY = 20; // delay between each game-state update in the game
 
-    private final static int[] waveDuration = {10000, 20000, 20000}; // waves duration in ms
+    private final static int[] waveDuration = {10000, 20000, 20000, 20000, 20000, 20000, 20000}; // waves duration in ms
     private int timeSinceWaveStart = 0;
     private GameInterface gameInterface;
-    private boolean VERBOSE = true;
+    private final boolean VERBOSE = true;
     private int level;
     private int currentWave;
     private int waveNum;
-    private int mode;
-    private Board board;
-    private int hp = 3;
 
-    private Timer DefaultAlienSpawner;
+    //variables to handle different difficulties(game mode)
+    private int mode;
+    public static final int EASY_MODE = 1;
+    public static final int NORMAL_MODE = 2;
+    public static final int HARD_MODE = 3;
+    private final Board board;
+    private int hp = 3;
+    private final Timer AlienSpawner;
 
     public Board getBoard() {
         return board;
@@ -33,8 +37,25 @@ public class Game {
         this.level = level;
         this.currentWave = 0;
         this.board = new Board(this);
-        this.waveNum = level + 3;
-        this.mode = mode;
+
+        // Set wave number based on mode
+        switch(mode) {
+            case EASY_MODE:
+                this.waveNum = 3;
+                break;
+            case NORMAL_MODE:
+                this.waveNum = 5;
+                break;
+            case HARD_MODE:
+                this.waveNum = 7;
+                break;
+            default:
+                // Default to easy mode if an invalid mode is provided
+                this.waveNum = 5;
+                this.mode = NORMAL_MODE;
+                break;
+        }
+
         // use the eventQueue invoke later to execute the Graphical interface update in the EDT
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -46,7 +67,7 @@ public class Game {
 
         // define a basic alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
         // and prints the board every time
-        DefaultAlienSpawner = new Timer(8000, new ActionListener() {
+        AlienSpawner = new Timer(8000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 spawnAlien(); // Now chooses alien type based on the wave
@@ -68,7 +89,6 @@ public class Game {
     public void startGame(){
         System.out.println("Game Starting");
 
-
         Timer baseTimer = new Timer(TICKDELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,10 +106,9 @@ public class Game {
                 }
             }
         });
-
         baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
-
     }
+
     public void spawnAlien() {
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
@@ -125,16 +144,33 @@ public class Game {
     public void updateGame(){
         // Game logic
         // keep track of time elapsed to know when to end a wave
-        if (timeSinceWaveStart == 0){
-            if (currentWave == 1){
-                DefaultAlienSpawner.setDelay(4000);
-
+        if (timeSinceWaveStart == 0) {
+            switch (currentWave) {
+                case 1: // Wave 1
+                    AlienSpawner.setDelay(4000);
+                    break;
+                case 2: // Wave 2
+                    AlienSpawner.setDelay(3500);
+                    break;
+                case 3: // Wave 3
+                    AlienSpawner.setDelay(3000);
+                    break;
+                case 4: // Wave 4
+                    AlienSpawner.setDelay(2500);
+                    break;
+                case 5: // Wave 5
+                    AlienSpawner.setDelay(2000);
+                    break;
+                case 6: // Wave 6
+                    AlienSpawner.setDelay(1500);
+                    break;
+                case 7: // Wave 5
+                    AlienSpawner.setDelay(1000);
+                    break;
             }
-            if (currentWave == 2){
-                DefaultAlienSpawner.setDelay(2000);
-            }
-            DefaultAlienSpawner.start();
+            AlienSpawner.start();
         }
+
 
         // here several updates, like position update, etc..., will be done every TICK
         int hpLost = board.updateEntities(TICKDELAY);
@@ -150,14 +186,18 @@ public class Game {
         // TODO
 
         timeSinceWaveStart += TICKDELAY;
-        if (timeSinceWaveStart >= waveDuration[currentWave]){
-            DefaultAlienSpawner.stop();
-            if (board.noAlien()){
-                System.out.println("Good job, you finished Wave " + currentWave);
+        if (timeSinceWaveStart >= waveDuration[currentWave]) {
+            AlienSpawner.stop();
+            if (board.noAlien()) {
+                System.out.println("Good job, you finished Wave " + (currentWave + 1));
                 timeSinceWaveStart = 0;
                 currentWave += 1;
-            }
 
+                // Check if all waves are completed
+                if (currentWave >= waveNum) {
+                    System.out.println("All waves completed!");
+                }
+            }
         }
     }
     public GameInterface getGameInterface() {

@@ -1,8 +1,6 @@
 package com.li.oopproject;
 
-import com.li.oopproject.entities.DefaultHuman;
-import com.li.oopproject.entities.Entity;
-import com.li.oopproject.entities.Human;
+import com.li.oopproject.entities.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -39,6 +37,18 @@ public class GameInterface extends JFrame{
         DefaultHumanButton.setyPos(-TILESIZE);
         DefaultHumanButton.setxPos(0);
         displayedEntities.add(DefaultHumanButton);
+
+        // Create Gunner and GhostBuster buttons
+        Human gunnerButton = new Gunner(game.getBoard());
+        gunnerButton.setyPos(-TILESIZE);
+        gunnerButton.setxPos(TILESIZE); // Adjust X position for Gunner
+        displayedEntities.add(gunnerButton);
+
+        Human ghostBusterButton = new GhostBuster(game.getBoard());
+        ghostBusterButton.setyPos(-TILESIZE);
+        ghostBusterButton.setxPos(2 * TILESIZE); // Adjust X position for GhostBuster
+        displayedEntities.add(ghostBusterButton);
+
         // button panels contains transparent buttons and one additional row to choose which human to select to place
         // TODO: top selection row
         buttonPanel = new JPanel();
@@ -66,12 +76,30 @@ public class GameInterface extends JFrame{
                                 clickedIcon = null;
                             }
                         }
-                        else{
+                        else {
+                            // Top row button logic for selecting an entity
                             displayedEntities.remove(clickedIcon);
                             clickedIcon = null;
-                            if (finalJ == 0){
-                                System.out.println("selected DefaultHuman");
-                                clickedIcon = new DefaultHuman(game.getBoard());
+
+                            switch(finalJ) {
+                                case 0: // DefaultHuman button
+                                    System.out.println("Selected DefaultHuman");
+                                    clickedIcon = new DefaultHuman(game.getBoard());
+                                    break;
+                                case 1: // Gunner button
+                                    System.out.println("Selected Gunner");
+                                    clickedIcon = new Gunner(game.getBoard());
+                                    break;
+                                case 2: // GhostBuster button
+                                    System.out.println("Selected GhostBuster");
+                                    clickedIcon = new GhostBuster(game.getBoard());
+                                    break;
+                                default:
+                                    // Handle other cases or do nothing
+                                    break;
+                            }
+
+                            if (clickedIcon != null) {
                                 clickedIcon.setxPos(0);
                                 clickedIcon.setyPos(-TILESIZE);
                                 displayedEntities.add(clickedIcon);
@@ -110,6 +138,7 @@ public class GameInterface extends JFrame{
                 buttonPanel.add(button);
             }
         }
+
         // background panel to hold the background image
         backGroundPanel = new JPanel();
 
