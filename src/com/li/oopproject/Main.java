@@ -14,7 +14,6 @@ public class Main {
             }
         });
 
-
     }
 
     public static void startGame(int selectedMode){

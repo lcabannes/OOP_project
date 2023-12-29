@@ -1,8 +1,6 @@
 package com.li.oopproject;
 
-import com.li.oopproject.entities.Alien;
-import com.li.oopproject.entities.Human;
-import com.li.oopproject.entities.Projectile;
+import com.li.oopproject.entities.*;
 
 import java.util.ArrayList;
 
@@ -48,6 +46,11 @@ public class Collision {
         }
 
         for (Alien alien : aliensToConsider) {
+            // Check if the alien is a GhostAlien and the projectile is a Bullet
+            if (alien instanceof GhostAlien && projectile instanceof Bullet) {
+                continue; // Skip collision check for Bullet and GhostAlien
+            }
+
             if (isProjectileHittingAlien(projectile, alien)) {
                 handleProjectileAlienImpact(projectile, alien);
                 return true; // Collision occurred

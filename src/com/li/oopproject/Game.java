@@ -17,11 +17,11 @@ public class Game {
     private GameInterface gameInterface;
     private final boolean VERBOSE = true;
     private int level;
+
+    private int mode;
     private int currentWave;
     private int waveNum;
 
-    //variables to handle different difficulties(game mode)
-    private int mode;
     public static final int EASY_MODE = 1;
     public static final int NORMAL_MODE = 2;
     public static final int HARD_MODE = 3;
@@ -35,11 +35,13 @@ public class Game {
 
     public Game(int level, int mode){
         this.level = level;
-        this.currentWave = 0;
+        this.currentWave = 1;
         this.board = new Board(this);
+        //variables to handle different mode(game mode)
+        this.mode = mode;
 
         // Set wave number based on mode
-        switch(mode) {
+        switch(this.mode) {
             case EASY_MODE:
                 this.waveNum = 3;
                 break;
@@ -51,8 +53,8 @@ public class Game {
                 break;
             default:
                 // Default to easy mode if an invalid mode is provided
-                this.waveNum = 5;
-                this.mode = NORMAL_MODE;
+                System.out.print("Invalid game mode/n");
+                this.waveNum = 3;
                 break;
         }
 
@@ -84,7 +86,7 @@ public class Game {
         return this.hp <= 0;
     }
     public boolean isGameWon(){
-        return this.currentWave == this.waveNum;
+        return this.currentWave > this.waveNum;
     }
     public void startGame(){
         System.out.println("Game Starting");
@@ -189,12 +191,12 @@ public class Game {
         if (timeSinceWaveStart >= waveDuration[currentWave]) {
             AlienSpawner.stop();
             if (board.noAlien()) {
-                System.out.println("Good job, you finished Wave " + (currentWave + 1));
+                System.out.println("Good job, you finished Wave " + (currentWave));
                 timeSinceWaveStart = 0;
                 currentWave += 1;
 
                 // Check if all waves are completed
-                if (currentWave >= waveNum) {
+                if (currentWave > waveNum) {
                     System.out.println("All waves completed!");
                 }
             }

@@ -15,4 +15,8 @@ public abstract class Alien extends Entity implements Mobile{
     public void move(){
         this.setxPos(this.getxPos()-speed);
     }
+
+    public int getRewardAmount() {
+        return 50;
+    }
 }

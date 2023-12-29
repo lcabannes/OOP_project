@@ -32,10 +32,10 @@ public class GhostBuster extends Human{
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-        Projectile bullet = new Bullet(damage, this.getBoard());
-        bullet.setxPos(this.getxPos()+50);
-        bullet.setyPos(this.getyPos());
-        return bullet;
+        Projectile laser = new Laser(damage, this.getBoard());
+        laser.setxPos(this.getxPos()+50);
+        laser.setyPos(this.getyPos());
+        return laser;
     }
 
 }
