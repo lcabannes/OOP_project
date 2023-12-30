@@ -55,7 +55,7 @@ public class Game {
                 break;
             default:
                 // Default to easy mode if an invalid mode is provided
-                System.out.print("Default mode, easy mode/n");
+                System.out.print("Default mode, easy mode\n");
                 this.waveNum = 3;
                 break;
         }
