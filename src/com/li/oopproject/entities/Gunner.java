@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class DefaultHuman extends Human {
+public class Gunner extends Human{
     private final static int reloadTime = 2000;  // reload delay in ms
 
     private final static int maxHP = 100;
@@ -16,15 +16,15 @@ public class DefaultHuman extends Human {
     {
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/DefaultHuman.jpg")));
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/Gunner.png")));
             this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), 50, 50));
         }
         catch (IOException e) {
-            System.out.println("No image file found for DefaultHuman");
+            System.out.println("No image file found for Gunner");
         }
     }
 
-    public DefaultHuman(Board board){
+    public Gunner(Board board){
 
         super (damage, maxHP, board, reloadTime);
     }
@@ -32,10 +32,11 @@ public class DefaultHuman extends Human {
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-        Projectile laser = new Laser(damage, this.getBoard());
-        laser.setxPos(this.getxPos()+50);
-        laser.setyPos(this.getyPos());
-        return laser;
+        Projectile bullet = new Bullet(damage, this.getBoard());
+        bullet.setxPos(this.getxPos()+50);
+        bullet.setyPos(this.getyPos());
+        return bullet;
     }
 
 }
+

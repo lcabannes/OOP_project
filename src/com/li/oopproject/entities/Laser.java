@@ -7,21 +7,23 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class Bullet extends Projectile{
-    // the hps of a bullet is how many times it can collide before dying
+public class Laser extends Projectile{
+
+    public Laser(int damage, Board board){
+        super(1, damage, 5, board);
+    }
 
     // this initialization block, like all the others, tries to find the image corresponding to the laser
     {
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Projectiles/Bullet.png")));
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Projectiles/Laser.jpg")));
             this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), 50, 25));
         }
         catch (IOException e) {
-            System.out.println("No image file found for Bullet");
+            System.out.println("No image file found for Laser");
         }
     }
-    public Bullet(int damage, Board board){
-        super(1, damage, 5, board);
-    }
 }
+
+

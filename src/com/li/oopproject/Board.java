@@ -7,29 +7,41 @@ import com.li.oopproject.entities.*;
 
 public class Board {
     private String name;
-    private Tile[][] tiles = new Tile[height][length];
+    Tile[][] tiles = new Tile[height][length];
     private Tile entrance;
     private Tile exit;
     private Human human;
     public static final int length = 8; // fixed length for all Boards
     public static final int height = 5; // fixed height for all board
     private final Game game;
+    private Collision collision;//check collision
 
-    public Board(Game game){
+    public Board(Game game) {
         this.name = "default_board";
         this.game = game;
-        for (int row = 0; row < Board.height; row++){
-            for (int col = 0; col<Board.length; col++){
+        for (int row = 0; row < Board.height; row++) {
+            for (int col = 0; col < Board.length; col++) {
                 this.tiles[row][col] = new Tile();
             }
         }
+        this.collision = new Collision(this); // Initializing the Collision object
     }
 
-    public class Tile{ // Tile local class is aggregated by a Board, a tile contains at most 1 human and possibly many Aliens
-        private ArrayList<Alien> aliens;
-        private Human human;
+    // Add getter methods for tiles and game if not already present
+    public Tile[][] getTiles() {
+        return this.tiles;
+    }
 
-        private ArrayList<Projectile> projectiles;
+    public Game getGame() {
+        return this.game;
+    }
+
+
+    public class Tile { // Tile local class is aggregated by a Board, a tile contains at most 1 human and possibly many Aliens
+        ArrayList<Alien> aliens;
+        Human human;
+
+        ArrayList<Projectile> projectiles;
 
         public Tile() { // Aliens are stored in each tile
             this.aliens = new ArrayList<Alien>();
@@ -38,79 +50,86 @@ public class Board {
 
         }
     }
-    // return true if a human was place, false otherwise
-    public boolean placeHuman(Human human, int row, int col){
-        if (tiles[row][col].human != null){
+
+    // Return true if a human was place, false otherwise
+    public boolean placeHuman(Human human, int row, int col) {
+        if (tiles[row][col].human != null) {
             return false;
         }
-        human.setxPos(col*100);
-        human.setyPos(row*100);
+        human.setxPos(col * 100);
+        human.setyPos(row * 100);
         tiles[row][col].human = human;
-
-
         return true;
     }
 
     /**
      * check for every tile to find the entity to erase
-     * @param entity
+     *
      */
-    public void removeEntity(Entity entity){
+    public void removeEntity(Entity entity) {
         game.getGameInterface().removeEntity(entity);
         // search for said entity in all tiles and all entity fields of those tiles, stop when we find it
-        for (int row=0; row<height; row++){
-            for (int col=0; col<length; col++){
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < length; col++) {
 
                 Tile tile = this.tiles[row][col];
-                if (tile.human == entity){
+                if (tile.human == entity) {
                     tile.human = null;
                     return;
                 }
-                for (Projectile projectile: tile.projectiles){
-                    if (projectile == entity){
+                for (Projectile projectile : tile.projectiles) {
+                    if (projectile == entity) {
                         tile.projectiles.remove(projectile);
                         return;
                     }
                 }
-                for (Alien alien:tile.aliens){
-                        if (alien == entity){
-                            tile.aliens.remove(alien);
-                            return;
-                        }
+                for (Alien alien : tile.aliens) {
+                    if (alien == entity) {
+                        tile.aliens.remove(alien);
+                        return;
+                    }
                 }
 
             }
         }
     }
-    public Alien spawnAlien(String alienName, int yposition) {
-        // check for which zombie to spawn based on name passed to the method
-        Alien newAlien;
-        if (alienName.equals("DefaultAlien")) {
-            newAlien = new DefaultAlien(this);
-            // set default position of new Zombie to rightmost (each tile is 100 units so rightmost = 100 * tile_num)
-            newAlien.setxPos(Board.length * 100);
-            newAlien.setyPos(yposition * 100);
 
-        } else {
-            System.out.println("Tried to spawn unknown zombie name");
-            newAlien = new DefaultAlien(this);
+    public Alien spawnAlien(String alienName, int yposition) {
+        Alien newAlien;
+        switch (alienName) {
+            // Spawn different type of Aliens
+            case "DefaultAlien":
+                newAlien = new DefaultAlien(this);
+                break;
+            case "OctopusAlien":
+                newAlien = new OctopusAlien(this);
+                break;
+            case "GhostAlien":
+                newAlien = new GhostAlien(this);
+                break;
+            case "AlienShip":
+                newAlien = new AlienShip(this);
+                break;
+            default:
+                System.out.println("Tried to spawn unknown alien name");
+                newAlien = new DefaultAlien(this);
         }
+        newAlien.setxPos(Board.length * 100);
+        newAlien.setyPos(yposition * 100);
         this.tiles[yposition][Board.length - 1].aliens.add(newAlien);
         return newAlien;
     }
 
     // check each tile, if it has aliens then print "A"
-    public void display(){
+    public void display() {
         System.out.println("Current Board:");
-        for (int row = 0; row < Board.height; row++){
-            for (int col = 0; col<Board.length; col++){
-                if (this.tiles[row][col].human != null){
+        for (int row = 0; row < Board.height; row++) {
+            for (int col = 0; col < Board.length; col++) {
+                if (this.tiles[row][col].human != null) {
                     System.out.printf("|H");
-                }
-                else if (this.tiles[row][col].aliens.isEmpty()){
+                } else if (this.tiles[row][col].aliens.isEmpty()) {
                     System.out.printf("|_");
-                }
-                else{
+                } else {
                     System.out.printf("|A");
 
                 }
@@ -120,19 +139,23 @@ public class Board {
         }
     }
 
-    public int updateEntities(int elapsedTime){
+    public int updateEntities(int elapsedTime) {
         // this method returns how many aliens have passed the final line after moving this update
         // it also reloads all the humans guns
         int hpLost = 0;
-        for (int row = 0; row < Board.height; row++){
-            for (int col = 0; col<Board.length; col++){
+
+        // Check for collisions at the beginning of each update
+        collision.checkCollisions();
+
+        for (int row = 0; row < Board.height; row++) {
+            for (int col = 0; col < Board.length; col++) {
 
                 Tile tile = tiles[row][col];
                 // if there is a human in this tile, reload the human
-                if (tile.human!=null){
+                if (tile.human != null) {
 
                     tile.human.reload(elapsedTime);
-                    if (tile.human.getReloadTimeRemaining() <= 0){
+                    if (tile.human.getReloadTimeRemaining() <= 0) {
                         Projectile projectile = tile.human.attack();
                         tile.projectiles.add(projectile);
                         game.getGameInterface().addEntity(projectile);
@@ -151,38 +174,36 @@ public class Board {
                     alien.move();
                     // if an Alien's position is negative it means it breached the Human's defense and
                     // one HP should be deducted from the player's HP
-                    if (alien.getxPos() < 0){
+                    if (alien.getxPos() < 0) {
                         hpLost++;
                         tile.aliens.remove(alien);
                         game.getGameInterface().removeEntity(alien);
                     }
                     // if an Alien's position is less than it should be given its current tile, we remove it
                     // we move it to the tile on the left
-                    else if (alien.getxPos() < col * 100){
+                    else if (alien.getxPos() < col * 100) {
                         tile.aliens.remove(alien);
-                        tiles[row][col-1].aliens.add(alien);
-                    }
-                    else{
+                        tiles[row][col - 1].aliens.add(alien);
+                    } else {
                         i++;
                     }
                 }
                 // make all the projectiles move
                 int j = 0;
-                while (j < tile.projectiles.size()){
+                while (j < tile.projectiles.size()) {
                     Projectile projectile = tile.projectiles.get(j);
                     projectile.move();
 
-                    if (projectile.getxPos() >= 800){
+                    if (projectile.getxPos() >= 800) {
                         removeEntity(projectile);
                     }
                     // if a projectile has crossed a tile boundary, move it to the next tile, eventually,
                     // all projectiles should maybe be stored as a single list for each row, not each Tile, altough
                     // it might be fine as is
-                    else if (projectile.getxPos() >= (col+1) * 100){
+                    else if (projectile.getxPos() >= (col + 1) * 100) {
                         tile.projectiles.remove(projectile);
-                        tiles[row][col+1].projectiles.add(projectile);
-                    }
-                    else{
+                        tiles[row][col + 1].projectiles.add(projectile);
+                    } else {
                         j++;
                     }
                 }
@@ -191,49 +212,6 @@ public class Board {
         return hpLost;
     }
 
-    public void checkCollisions(){
-
-        for (int row = 0; row < Board.height; row++) {
-            for (int col = 0; col < Board.length; col++) {
-
-                Tile tile = tiles[row][col];
-                int i = 0;
-                // for each projectile, search for the closest alien it is touching, assuming entities have a hitbox
-                // size of 50 -> this needs to become a constant like HITBOXSIZE, also, check for aliens in the next
-                // tile so that it doesn't miss it by crossing each other without touching at the next iteration
-                while (i < tile.projectiles.size()){
-                    Projectile projectile = tile.projectiles.get(i);
-                    ArrayList<Alien> aliensToConsider = new ArrayList<Alien>();
-                    aliensToConsider.addAll(tile.aliens);
-                    if (col+1 < Board.length){
-                        aliensToConsider.addAll(tiles[row][col+1].aliens);
-                    }
-                    Alien closestAlien = null;
-                    int closestDist = 10000; // set an initial distance to infinite
-                    for (Alien alien:aliensToConsider){
-                        int dist = alien.getxPos() - projectile.getxPos();
-                        if (Math.abs(dist) < 50 & dist < closestDist){
-                            closestAlien = alien;
-                            closestDist = dist;
-                        }
-                    }
-                    // if the projectile is touching an alien, damage it and remove the dead entities
-                    if (closestAlien != null){
-                        closestAlien.reduceHp(projectile.getDamage());
-                        if (!closestAlien.isAlive()){
-                            removeEntity(closestAlien);
-                        }
-                        projectile.reduceHp(1);
-                        if (!projectile.isAlive()){
-                            removeEntity(projectile);
-                            i--;
-                        }
-                    }
-                    i++;
-                }
-            }
-        }
-    }
     public boolean noAlien(){
         for (int row = 0; row < height; row++){
             if (!noAlien(row)){
@@ -245,9 +223,11 @@ public class Board {
     public boolean noAlien(int row){
         for (Tile tile:tiles[row]){
             if (!tile.aliens.isEmpty()){
-                return false;
+                    return false;
             }
         }
         return true;
     }
 }
+
+

@@ -1,60 +1,66 @@
 package com.li.oopproject;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.File;
-import java.io.IOException;
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Menu extends JFrame {
+    private int selectedMode;
+
     public Menu() {
-        // Create a panel
+
+        // Create a main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
+
+        // Create a dropdown for game modes
+        String[] gameModes = {"Easy", "Normal", "Hard"};
+        JComboBox<String> modeDropdown = new JComboBox<>(gameModes);
+        modeDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String selected = (String)cb.getSelectedItem();
+                switch (selected) {
+                    case "Easy":
+                        selectedMode = Game.EASY_MODE;
+                        break;
+                    case "Normal":
+                        selectedMode = Game.NORMAL_MODE;
+                        break;
+                    case "Hard":
+                        selectedMode = Game.HARD_MODE;
+                        break;
+                }
+            }
+        });
 
         // Create a button for starting a new game
         JButton newGameButton = new JButton("New Game");
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Code to start a new game
                 dispose();
                 startGame();
             }
         });
 
-        // Add the button to the panel
+        // Add components to the main panel
+        mainPanel.add(modeDropdown, BorderLayout.NORTH);
         mainPanel.add(newGameButton, BorderLayout.CENTER);
 
-        // Set frame properties
+        // Frame properties
         setTitle("Game Menu");
         setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the frame
-
-        // Add the panel to the frame
+        setLocationRelativeTo(null);
         add(mainPanel);
-
-        // Set frame visibility
         setVisible(true);
     }
 
-
     private void startGame() {
-        // Code to start the game
-        // This method can be customized based on your game's requirements
-        System.out.println("Game is starting...");
-
-        Main.startGame();
+        System.out.println("Game is starting in mode: " + selectedMode);
+        Main.startGame(selectedMode); // Pass the selected mode to the game
     }
-
 }

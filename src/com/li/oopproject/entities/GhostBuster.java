@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class DefaultHuman extends Human {
+public class GhostBuster extends Human{
     private final static int reloadTime = 2000;  // reload delay in ms
 
     private final static int maxHP = 100;
@@ -16,15 +16,15 @@ public class DefaultHuman extends Human {
     {
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/DefaultHuman.jpg")));
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBuster.png")));
             this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), 50, 50));
         }
         catch (IOException e) {
-            System.out.println("No image file found for DefaultHuman");
+            System.out.println("No image file found for GhostBuster");
         }
     }
 
-    public DefaultHuman(Board board){
+    public GhostBuster(Board board){
 
         super (damage, maxHP, board, reloadTime);
     }
@@ -39,3 +39,4 @@ public class DefaultHuman extends Human {
     }
 
 }
+
