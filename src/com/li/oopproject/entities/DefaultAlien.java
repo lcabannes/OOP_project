@@ -12,8 +12,7 @@ public class DefaultAlien extends Alien{
     private final static int maxHP = 30;
     private final static int speed = 1;
     private final static int damage = 10;
-
-
+    private final static int reloadTime = 1000;
     {
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
@@ -26,6 +25,6 @@ public class DefaultAlien extends Alien{
     }
 
     public DefaultAlien(Board board){
-        super(maxHP, damage, board, speed);
+        super(maxHP, damage, board, speed, reloadTime);
     }
 }

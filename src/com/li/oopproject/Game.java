@@ -166,7 +166,7 @@ public class Game {
                 case 6: // Wave 6
                     AlienSpawner.setDelay(1500);
                     break;
-                case 7: // Wave 5
+                case 7: // Wave 7
                     AlienSpawner.setDelay(1000);
                     break;
             }

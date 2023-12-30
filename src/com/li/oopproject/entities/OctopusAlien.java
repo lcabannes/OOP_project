@@ -11,6 +11,7 @@ public class OctopusAlien extends Alien {
     private final static int maxHP = 30;
     private final static int speed = 1;
     private final static int damage = 10;
+    private final static int reloadTime = 500;
 
 
     {
@@ -24,7 +25,7 @@ public class OctopusAlien extends Alien {
         }
     }
     public OctopusAlien(Board board){
-        super(maxHP, damage, board, speed);
+        super(maxHP, damage, board, speed, reloadTime);
     }
 
 }

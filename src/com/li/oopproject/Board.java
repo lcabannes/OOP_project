@@ -159,18 +159,17 @@ public class Board {
                         Projectile projectile = tile.human.attack();
                         tile.projectiles.add(projectile);
                         game.getGameInterface().addEntity(projectile);
-                        EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-
-                            }
-                        });
                     }
                 }
                 // make all the aliens move
                 int i = 0;
                 while (i < tile.aliens.size()) {
                     Alien alien = tile.aliens.get(i);
+                    if (tile.human != null && collision.isHumanHittingAlien(tile.human, alien)){
+                        alien.reload(elapsedTime);
+                        i++;
+                        continue;
+                    }
                     alien.move();
                     // if an Alien's position is negative it means it breached the Human's defense and
                     // one HP should be deducted from the player's HP

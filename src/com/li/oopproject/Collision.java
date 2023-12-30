@@ -60,7 +60,7 @@ public class Collision {
     }
 
     // Method to determine if a projectile is hitting an alien
-    private boolean isProjectileHittingAlien(Projectile projectile, Alien alien) {
+    public boolean isProjectileHittingAlien(Projectile projectile, Alien alien) {
         int distance = alien.getxPos() - projectile.getxPos();
         return Math.abs(distance) < 50;
     }
@@ -90,7 +90,7 @@ public class Collision {
     }
 
     // Method to determine if a human is hitting an alien
-    private boolean isHumanHittingAlien(Human human, Alien alien) {
+    public boolean isHumanHittingAlien(Human human, Alien alien) {
         return Math.abs(alien.getxPos() - human.getxPos()) < 50;
     }
 
