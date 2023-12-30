@@ -17,7 +17,7 @@ public class Gunner extends Human{
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
                     getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/Gunner.png")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), 50, 50));
+            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
         }
         catch (IOException e) {
             System.out.println("No image file found for Gunner");

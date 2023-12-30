@@ -11,6 +11,7 @@ public class Laser extends Projectile{
 
     public Laser(int damage, Board board){
         super(1, damage, 5, board);
+
     }
 
     // this initialization block, like all the others, tries to find the image corresponding to the laser
@@ -18,7 +19,7 @@ public class Laser extends Projectile{
         try{
             this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
                     getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Projectiles/Laser.jpg")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), 50, 25));
+            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
         }
         catch (IOException e) {
             System.out.println("No image file found for Laser");
