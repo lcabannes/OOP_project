@@ -16,6 +16,8 @@ public class Board {
     private final Game game;
     private Collision collision;//check collision
 
+    private final GoldSystem goldSystem = new GoldSystem();
+
     public Board(Game game) {
         this.name = "default_board";
         this.game = game;
@@ -30,10 +32,6 @@ public class Board {
     // Add getter methods for tiles and game if not already present
     public Tile[][] getTiles() {
         return this.tiles;
-    }
-
-    public Game getGame() {
-        return this.game;
     }
 
 
@@ -51,15 +49,35 @@ public class Board {
         }
     }
 
-    // Return true if a human was place, false otherwise
-    public boolean placeHuman(Human human, int row, int col) {
-        if (tiles[row][col].human != null) {
+    // Place human when not human in current tile with enough gold
+    // Cannot place if already human on tile or without enough gold
+    public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem) {
+        int goldCost = 0;
+        if (human instanceof Gunner){
+            goldCost = Gunner.GOLD_COST;
+        }else if (human instanceof GhostBuster) {
+            goldCost = GhostBuster.GOLD_COST;
+        }else if (human instanceof DefaultHuman) {
+            goldCost = DefaultHuman.GOLD_COST;
+        }
+        if (goldSystem.getGold() >= goldCost) {
+            if (tiles[row][col].human != null) {
+                return false;
+            }
+            human.setxPos(col * 100);
+            human.setyPos(row * 100);
+            tiles[row][col].human = human;
+            goldSystem.addGold(-goldCost); // Deduct gold
+            System.out.println("Gold after deduct: " + goldSystem.getGold());
+            return true;
+        } else {
+            System.out.println("Not enough gold to place this human");
             return false;
         }
-        human.setxPos(col * 100);
-        human.setyPos(row * 100);
-        tiles[row][col].human = human;
-        return true;
+    }
+
+    public GoldSystem getGoldSystem() {
+        return this.goldSystem;
     }
 
     /**
@@ -94,6 +112,7 @@ public class Board {
         }
     }
 
+    // Spawn different types of alien
     public Alien spawnAlien(String alienName, int yposition) {
         Alien newAlien;
         switch (alienName) {

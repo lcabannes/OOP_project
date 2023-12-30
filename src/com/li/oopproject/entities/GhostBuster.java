@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class GhostBuster extends Human{
+    public static final int GOLD_COST = 50;
     private final static int reloadTime = 2000;  // reload delay in ms
 
     private final static int maxHP = 100;
