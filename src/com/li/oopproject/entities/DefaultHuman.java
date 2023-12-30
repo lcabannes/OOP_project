@@ -26,7 +26,7 @@ public class DefaultHuman extends Human {
 
     public DefaultHuman(Board board){
 
-        super (damage, maxHP, board, reloadTime);
+        super (maxHP, damage, board, reloadTime);
     }
 
 

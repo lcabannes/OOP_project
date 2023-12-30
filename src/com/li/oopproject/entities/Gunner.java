@@ -25,8 +25,7 @@ public class Gunner extends Human{
     }
 
     public Gunner(Board board){
-
-        super (damage, maxHP, board, reloadTime);
+        super (maxHP, damage, board, reloadTime);
     }
 
 

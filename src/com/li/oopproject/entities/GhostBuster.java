@@ -9,9 +9,9 @@ import java.io.IOException;
 
 public class GhostBuster extends Human{
     private final static int reloadTime = 2000;  // reload delay in ms
-
     private final static int maxHP = 100;
     private final static int damage = 10;
+
 
     {
         try{
@@ -26,7 +26,7 @@ public class GhostBuster extends Human{
 
     public GhostBuster(Board board){
 
-        super (damage, maxHP, board, reloadTime);
+        super (maxHP, damage, board, reloadTime);
     }
 
 

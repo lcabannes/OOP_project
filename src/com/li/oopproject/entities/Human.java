@@ -2,8 +2,8 @@ package com.li.oopproject.entities;
 import com.li.oopproject.Board;
 public abstract class Human extends Entity{
     private int reloadTimeRemaining; // how much ms left until a unit can attack
-    public Human(int damage, int hp, Board board, int reloadTime){
-        super (damage, hp, board);
+    public Human(int maxHp, int damage, Board board, int reloadTime){
+        super (maxHp, damage, board);
         reloadTimeRemaining = reloadTime;
     }
     public int getReloadTimeRemaining() {

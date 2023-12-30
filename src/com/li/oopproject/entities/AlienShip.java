@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class AlienShip extends Alien {
 
-    private final static int maxHP = 30;
+    private final static int maxHP = 100;
     private final static int speed = 1;
-    private final static int damage = 10;
-
+    private final static int damage = 100;
+    private final static int reloadTime = 2000;
 
     {
         try{
@@ -25,6 +25,6 @@ public class AlienShip extends Alien {
         }
     }
     public AlienShip(Board board){
-        super(maxHP, damage, board, speed);
+        super(maxHP, damage, board, speed, reloadTime);
     }
     }
