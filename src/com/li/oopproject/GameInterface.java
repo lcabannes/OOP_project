@@ -25,9 +25,14 @@ public class GameInterface extends JFrame{
     private ArrayList<Entity> displayedEntities = new ArrayList<>();
     private Human clickedIcon = null;
     private GoldSystem goldSystem;
+
     public GameInterface(Game game) {
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
+
+        // Play bgmusic
+        AudioManage audioManage = new AudioManage();
+        audioManage.loadBGMusic();
 
         setSize(WINDOWLENGTH, WINDOWHEIGHT);
         // use a layered Pane to deal with the different layers of panels
