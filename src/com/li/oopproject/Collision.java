@@ -5,10 +5,14 @@ import com.li.oopproject.entities.*;
 import java.util.ArrayList;
 
 public class Collision {
+
+    private GoldSystem goldSystem;
+
     private Board board;
 
     public Collision(Board board) {
         this.board = board;
+        this.goldSystem = board.getGoldSystem();
     }
 
     // Main method to check for all types of collisions
@@ -66,10 +70,11 @@ public class Collision {
     }
 
     // Method to handle the impact of a projectile on an alien
-    private void handleProjectileAlienImpact(Projectile projectile, Alien alien) {
+    protected void handleProjectileAlienImpact(Projectile projectile, Alien alien) {
         alien.reduceHp(projectile.getDamage());
         if (!alien.isAlive()) {
             board.removeEntity(alien);
+            goldSystem.addGold(goldSystem.getGoldForAlienType(alien));
         }
         projectile.reduceHp(1);
         if (!projectile.isAlive()) {
@@ -102,4 +107,7 @@ public class Collision {
             tile.human = null;
         }
     }
+
+
 }
+

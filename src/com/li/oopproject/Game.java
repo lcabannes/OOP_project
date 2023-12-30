@@ -29,6 +29,8 @@ public class Game {
     private int hp = 3;
     private final Timer AlienSpawner;
 
+    private GoldSystem goldSystem;
+
     public Board getBoard() {
         return board;
     }
@@ -53,7 +55,7 @@ public class Game {
                 break;
             default:
                 // Default to easy mode if an invalid mode is provided
-                System.out.print("Invalid game mode/n");
+                System.out.print("Default mode, easy mode/n");
                 this.waveNum = 3;
                 break;
         }
@@ -134,14 +136,15 @@ public class Game {
         gameInterface.addEntity(alien);
     }
 
-    public boolean placeHuman(Human human, int row, int col){
+    public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem){
 
-        if (board.placeHuman(human, row, col)){
+        if (board.placeHuman(human, row, col, goldSystem)){
             gameInterface.addEntity(human);
             return true;
         }
         return false;
     }
+
 
     public void updateGame(){
         // Game logic
