@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -25,10 +26,11 @@ public class Game {
     public static final int EASY_MODE = 1;
     public static final int NORMAL_MODE = 2;
     public static final int HARD_MODE = 3;
+    public static final int MARATHON_MODE = 4;
     private final Board board;
     private int hp = 3;
     private final Timer AlienSpawner;
-
+    private final ArrayList<String> spawnableAliens = new ArrayList<>();
     private GoldSystem goldSystem;
 
     public Board getBoard() {
@@ -52,6 +54,9 @@ public class Game {
                 break;
             case HARD_MODE:
                 this.waveNum = 7;
+                break;
+            case MARATHON_MODE:
+                this.waveNum = 100;
                 break;
             default:
                 // Default to easy mode if an invalid mode is provided
@@ -121,18 +126,9 @@ public class Game {
         //spawn OctopusAlien in wave 1
         //spawn OctopusAlien, GhostAlien in wave 2
         //spawn OctopusAlien, GhostAlien, AlienShip in wave 3
-        if (currentWave == 1) {
-            alien = board.spawnAlien("OctopusAlien", ySpawnPosition);
-        } else if (currentWave == 2) {
-            String[] aliens = {"OctopusAlien", "GhostAlien"};
-            alien = board.spawnAlien(aliens[randomInt.nextInt(aliens.length)], ySpawnPosition);
-        } else if (currentWave >= 3) {
-            String[] aliens = {"OctopusAlien", "GhostAlien", "AlienShip"};
-            alien = board.spawnAlien(aliens[randomInt.nextInt(aliens.length)], ySpawnPosition);
-        } else {
-            alien = board.spawnAlien("DefaultAlien", ySpawnPosition);
-        }
 
+
+        alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition);
         gameInterface.addEntity(alien);
     }
 
@@ -151,13 +147,19 @@ public class Game {
         // keep track of time elapsed to know when to end a wave
         if (timeSinceWaveStart == 0) {
             switch (currentWave) {
+                case 0: // wave 0 for a fun easter egg
+                    spawnableAliens.add("DefaultAlien");
+                    AlienSpawner.setDelay(100);
                 case 1: // Wave 1
+                    spawnableAliens.add("OctopusAlien");
                     AlienSpawner.setDelay(4000);
                     break;
                 case 2: // Wave 2
+                    spawnableAliens.add("GhostAlien");
                     AlienSpawner.setDelay(3500);
                     break;
                 case 3: // Wave 3
+                    spawnableAliens.add("AlienShip");
                     AlienSpawner.setDelay(3000);
                     break;
                 case 4: // Wave 4
@@ -172,6 +174,10 @@ public class Game {
                 case 7: // Wave 7
                     AlienSpawner.setDelay(1000);
                     break;
+                default:
+                    if (AlienSpawner.getDelay() > 100) {
+                        AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
+                    }
             }
             AlienSpawner.start();
         }
@@ -191,12 +197,22 @@ public class Game {
         // TODO
 
         timeSinceWaveStart += TICKDELAY;
-        if (timeSinceWaveStart >= waveDuration[currentWave]) {
+        // for waves until 7  set current wave duration to corresponding duration
+        int curWaveDuration;
+        if (currentWave <= 7){
+            curWaveDuration = waveDuration[currentWave-1];
+        }
+        else {
+            // else (marathon mode) duration for waves is fixed: 30000
+            curWaveDuration = 30000;
+        }
+        if (timeSinceWaveStart >= curWaveDuration) {
             AlienSpawner.stop();
             if (board.noAlien()) {
                 System.out.println("Good job, you finished Wave " + (currentWave));
                 timeSinceWaveStart = 0;
                 currentWave += 1;
+
 
                 // Check if all waves are completed
                 if (currentWave > waveNum) {

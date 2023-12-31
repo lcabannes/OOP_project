@@ -5,23 +5,15 @@ import java.awt.image.BufferedImage;
 
 public abstract class Entity {
     //Class Entity variables
-    private static boolean isHuman = false;
-    private static boolean isAlien = false;
-    private static boolean isGhost = false;
     private int damage;
     private int hp;
     private Board board;
-
-    public void setClassIcon(BufferedImage classIcon) {
-        this.classIcon = classIcon;
+    private int length = 80;
+    private int height = 80;
+    public void setInstanceIcon(BufferedImage Icon) {
+        this.instanceIcon = Icon;
     }
-
-    private BufferedImage classIcon; // each entity class must have a picture
-
-    public BufferedImage getClassIcon() {
-        return classIcon;
-    }
-
+    private BufferedImage instanceIcon; // each entity has its own current icon
 
     public void setxPos(int xPos) {
         this.xPos = xPos;
@@ -42,21 +34,6 @@ public abstract class Entity {
         this.damage = damage;
         this.hp = hp;
         this.board = board;
-    }
-
-    // Getter for isHuman
-    public static boolean isHuman() {
-        return isHuman;
-    }
-
-    // Getter for isAlien
-    public static boolean isAlien() {
-        return isAlien;
-    }
-
-    // Getter for isGhost
-    public static boolean isGhost() {
-        return isGhost;
     }
 
     // Getter for damage
@@ -109,4 +86,9 @@ public abstract class Entity {
     public boolean isAlive(){
         return hp>0;
     }
+
+    public BufferedImage getInstanceIcon() {
+        return instanceIcon;
+    }
 }
+

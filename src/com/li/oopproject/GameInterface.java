@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameInterface extends JFrame{
-    public static final int WINDOWLENGTH = 800;
-    public static final int WINDOWHEIGHT = 600;
     public static final int TILESIZE = 100;
+    public static final int WINDOWLENGTH = Board.length * TILESIZE;
+    public static final int WINDOWHEIGHT = (Board.height+1) * TILESIZE;
     private Game game;
     private JPanel buttonPanel;
     private JPanel backGroundPanel;
@@ -221,7 +221,7 @@ public class GameInterface extends JFrame{
             // TODO: change this so that it is the Game class/board class that removes entities
             //  that should no longer be tracked
 
-            BufferedImage entityIcon = entity.getClassIcon();
+            BufferedImage entityIcon = entity.getInstanceIcon();
             // otherwise display it
             if (entityIcon != null) {
                 JLabel imageLabel = new JLabel(new ImageIcon(entityIcon));
