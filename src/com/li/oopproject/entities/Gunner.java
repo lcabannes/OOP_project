@@ -34,12 +34,30 @@ public class Gunner extends Human{
     public Gunner(Board board){
         super (maxHP, damage, board, reloadTime);
         setInstanceIcon(Gunner.classIcon);
+        setGoldCost(GOLD_COST);
     }
-
+    @Override
+    public void upgrade(){
+        super.upgrade();
+        BufferedImage upgradedIcon;
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedGunner.png";
+        try{
+            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded Gunner");
+            upgradedIcon = null;
+        }
+        setInstanceIcon(upgradedIcon);
+    }
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
         Projectile bullet = new Bullet(damage, this.getBoard());
+        if (isUpgraded()){
+            setReloadTimeRemaining(1000);
+        }
         bullet.setxPos(this.getxPos()+50);
         bullet.setyPos(this.getyPos());
         return bullet;

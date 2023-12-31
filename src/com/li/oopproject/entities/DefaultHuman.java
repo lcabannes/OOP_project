@@ -34,15 +34,21 @@ public class DefaultHuman extends Human {
     public DefaultHuman(Board board){
         super (maxHP, damage, board, reloadTime);
         setInstanceIcon(DefaultHuman.classIcon);
+        setGoldCost(GOLD_COST);
     }
 
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
         Projectile laser = new Laser(damage, this.getBoard());
+        if (isUpgraded()){
+            setReloadTimeRemaining(100);
+        }
         laser.setxPos(this.getxPos()+50);
         laser.setyPos(this.getyPos());
         return laser;
     }
+
+
 
 }

@@ -26,7 +26,7 @@ public class Bullet extends Projectile{
     }
 
     public Bullet(int damage, Board board){
-        super(1, damage, 5, board);
+        super(2, damage, 10, board);
         setInstanceIcon(Bullet.classIcon);
     }
 

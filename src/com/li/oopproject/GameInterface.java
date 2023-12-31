@@ -23,7 +23,7 @@ public class GameInterface extends JFrame{
     private JPanel backGroundPanel;
     private JPanel foreGroundPanel;
     private ArrayList<Entity> displayedEntities = new ArrayList<>();
-    private Human clickedIcon = null;
+    private Entity clickedIcon = null;
     private GoldSystem goldSystem;
 
     public GameInterface(Game game) {
@@ -37,21 +37,7 @@ public class GameInterface extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        Human DefaultHumanButton = new DefaultHuman(game.getBoard());
-        DefaultHumanButton.setyPos(-TILESIZE);
-        DefaultHumanButton.setxPos(0);
-        displayedEntities.add(DefaultHumanButton);
-
-        // Create Gunner and GhostBuster buttons
-        Human gunnerButton = new Gunner(game.getBoard());
-        gunnerButton.setyPos(-TILESIZE);
-        gunnerButton.setxPos(TILESIZE); // Adjust X position for Gunner
-        displayedEntities.add(gunnerButton);
-
-        Human ghostBusterButton = new GhostBuster(game.getBoard());
-        ghostBusterButton.setyPos(-TILESIZE);
-        ghostBusterButton.setxPos(2 * TILESIZE); // Adjust X position for GhostBuster
-        displayedEntities.add(ghostBusterButton);
+        initializeButtons();
 
         // button panels contains transparent buttons and one additional row to choose which human to select to place
         // TODO: top selection row
@@ -71,14 +57,28 @@ public class GameInterface extends JFrame{
                         if (finalI > 0) {
                             // when clicked try to place a human at this position, message the user about the outcome
                             if (clickedIcon != null) {
-                                if (game.placeHuman(clickedIcon, (finalI - 1), finalJ, goldSystem)) {
-                                    System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
-                                } else {
-                                    System.out.println("You cannot place this turret here");
+                                if (clickedIcon instanceof Human){
+                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem)) {
+                                        System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
+                                    } else {
+                                        System.out.println("You cannot place this turret here");
+                                    }
                                 }
-                                displayedEntities.remove(clickedIcon);
-                                clickedIcon = null;
+                                else{
+                                    Human human = game.getBoard().tiles[finalI-1][finalJ].human;
+                                    if (clickedIcon instanceof Upgrade){
+                                        if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
+                                            human.upgrade();
+                                            System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
+                                        } else {
+                                            System.out.println("You cannot upgrade this turret");
+                                        }
+                                    }
+                                }
                             }
+                            displayedEntities.remove(clickedIcon);
+                            clickedIcon = null;
+
                         }
                         else {
                             // Top row button logic for selecting an entity
@@ -98,6 +98,8 @@ public class GameInterface extends JFrame{
                                     System.out.println("Selected GhostBuster");
                                     clickedIcon = new GhostBuster(game.getBoard());
                                     break;
+                                case 5: // upgrade button
+                                    clickedIcon = new Upgrade(game.getBoard());
                                 default:
                                     // Handle other cases or do nothing
                                     break;
@@ -192,6 +194,29 @@ public class GameInterface extends JFrame{
         audioManage.loadBGMusic();
 
     }
+
+    public void initializeButtons(){
+        Human DefaultHumanButton = new DefaultHuman(game.getBoard());
+        DefaultHumanButton.setyPos(-TILESIZE);
+        DefaultHumanButton.setxPos(0);
+        displayedEntities.add(DefaultHumanButton);
+
+        // Create Gunner and GhostBuster buttons
+        Human gunnerButton = new Gunner(game.getBoard());
+        gunnerButton.setyPos(-TILESIZE);
+        gunnerButton.setxPos(TILESIZE); // Adjust X position for Gunner
+        displayedEntities.add(gunnerButton);
+
+        Human ghostBusterButton = new GhostBuster(game.getBoard());
+        ghostBusterButton.setyPos(-TILESIZE);
+        ghostBusterButton.setxPos(2 * TILESIZE); // Adjust X position for GhostBuster
+        displayedEntities.add(ghostBusterButton);
+
+        Entity UpgradeButton = new Upgrade(game.getBoard());
+        UpgradeButton.setyPos(-TILESIZE);
+        UpgradeButton.setxPos(5 * TILESIZE); // Adjust X position for GhostBuster
+        displayedEntities.add(UpgradeButton);
+    }
     // method to resize an image
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
@@ -235,6 +260,15 @@ public class GameInterface extends JFrame{
             i++;
         }
 
+    }
+    private JButton getButtonAt(int row, int col) {
+        Component[] components = buttonPanel.getComponents();
+        int index = row * ((GridLayout) buttonPanel.getLayout()).getColumns() + col;
+        if (index >= 0 && index < components.length && components[index] instanceof JButton) {
+            return (JButton) components[index];
+        } else {
+            throw new IllegalArgumentException("Invalid row or column specified.");
+        }
     }
     //stop tracking an entity
     public void removeEntity(Entity entity){
