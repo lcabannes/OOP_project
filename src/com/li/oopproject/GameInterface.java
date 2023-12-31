@@ -24,8 +24,16 @@ public class GameInterface extends JFrame{
     private JPanel foreGroundPanel;
     private ArrayList<Entity> displayedEntities = new ArrayList<>();
     private Human clickedIcon = null;
+    private GoldSystem goldSystem;
+
     public GameInterface(Game game) {
         this.game = game;
+        this.goldSystem = game.getBoard().getGoldSystem();
+
+        // Play bgmusic
+        AudioManage audioManage = new AudioManage();
+        audioManage.loadBGMusic();
+
         setSize(WINDOWLENGTH, WINDOWHEIGHT);
         // use a layered Pane to deal with the different layers of panels
         JLayeredPane layeredPane = new JLayeredPane();
@@ -67,7 +75,7 @@ public class GameInterface extends JFrame{
                         if (finalI > 0) {
                             // when clicked try to place a human at this position, message the user about the outcome
                             if (clickedIcon != null) {
-                                if (game.placeHuman(clickedIcon, (finalI - 1), finalJ)) {
+                                if (game.placeHuman(clickedIcon, (finalI - 1), finalJ, goldSystem)) {
                                     System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
                                 } else {
                                     System.out.println("You cannot place this turret here");
