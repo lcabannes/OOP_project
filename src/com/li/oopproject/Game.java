@@ -121,14 +121,7 @@ public class Game {
     public void spawnAlien() {
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
-        Alien alien;
-
-        //spawn OctopusAlien in wave 1
-        //spawn OctopusAlien, GhostAlien in wave 2
-        //spawn OctopusAlien, GhostAlien, AlienShip in wave 3
-
-
-        alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition);
+        Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition);
         gameInterface.addEntity(alien);
     }
 
@@ -147,18 +140,21 @@ public class Game {
         // keep track of time elapsed to know when to end a wave
         if (timeSinceWaveStart == 0) {
             switch (currentWave) {
-                case 0: // wave 0 for a fun easter egg
+                case 0: // wave 0 : for a fun easter egg
                     spawnableAliens.add("DefaultAlien");
                     AlienSpawner.setDelay(100);
                 case 1: // Wave 1
+                    //spawn OctopusAlien in wave 1
                     spawnableAliens.add("OctopusAlien");
                     AlienSpawner.setDelay(4000);
                     break;
                 case 2: // Wave 2
+                    //spawn OctopusAlien, GhostAlien in wave 2
                     spawnableAliens.add("GhostAlien");
                     AlienSpawner.setDelay(3500);
                     break;
                 case 3: // Wave 3
+                    //spawn OctopusAlien, GhostAlien, AlienShip in wave 3
                     spawnableAliens.add("AlienShip");
                     AlienSpawner.setDelay(3000);
                     break;
