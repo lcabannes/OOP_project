@@ -15,7 +15,7 @@ public class Menu extends JFrame {
         mainPanel.setLayout(new BorderLayout());
 
         // Create a dropdown for game modes
-        String[] gameModes = {"Easy", "Normal", "Hard"};
+        String[] gameModes = {"Easy", "Normal", "Hard", "Marathon"};
         JComboBox<String> modeDropdown = new JComboBox<>(gameModes);
         modeDropdown.addActionListener(new ActionListener() {
             @Override
@@ -31,6 +31,9 @@ public class Menu extends JFrame {
                         break;
                     case "Hard":
                         selectedMode = Game.HARD_MODE;
+                        break;
+                    case "Marathon":
+                        selectedMode = Game.MARATHON_MODE;
                         break;
                 }
             }
