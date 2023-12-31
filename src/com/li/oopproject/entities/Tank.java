@@ -34,6 +34,7 @@ public class Tank extends Human {
     public Tank(Board board){
         super (maxHP, damage, board, reloadTime);
         setInstanceIcon(Tank.classIcon);
+        setGoldCost(GOLD_COST);
     }
 
 
@@ -44,5 +45,7 @@ public class Tank extends Human {
         bomb.setyPos(this.getyPos());
         return bomb;
     }
+
+
 
 }

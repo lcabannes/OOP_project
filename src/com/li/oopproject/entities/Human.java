@@ -1,9 +1,10 @@
 package com.li.oopproject.entities;
 import com.li.oopproject.Board;
 public abstract class Human extends Entity{
-
+    private int goldCost = 0;
     static private final int height = 80;
     static private final int length = 80;
+    private boolean upgraded = false;
 
     private int reloadTimeRemaining; // how much ms left until a unit can attack
     public Human(int maxHp, int damage, Board board, int reloadTime){
@@ -21,6 +22,10 @@ public abstract class Human extends Entity{
         }
     }
 
+    public void upgrade(){
+        upgraded = true;
+    }
+
     public abstract Projectile attack();
 
     protected void setReloadTimeRemaining(int reloadTime) {
@@ -30,4 +35,13 @@ public abstract class Human extends Entity{
     public static int getLength(){ return length;}
 
     public static int getHeight(){ return height;}
+    public boolean isUpgraded(){ return upgraded;}
+
+    public int getGoldCost(){
+        return goldCost;
+    }
+
+    public void setGoldCost(int goldCost){
+        this.goldCost = goldCost;
+    }
 }

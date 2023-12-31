@@ -52,14 +52,9 @@ public class Board {
     // Place human when not human in current tile with enough gold
     // Cannot place if already human on tile or without enough gold
     public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem) {
-        int goldCost = 0;
-        if (human instanceof Gunner){
-            goldCost = Gunner.GOLD_COST;
-        }else if (human instanceof GhostBuster) {
-            goldCost = GhostBuster.GOLD_COST;
-        }else if (human instanceof Tank) {
-            goldCost = Tank.GOLD_COST;
-        }
+
+        int goldCost = human.getGoldCost();
+
         if (goldSystem.getGold() >= goldCost) {
             if (tiles[row][col].human != null) {
                 return false;
