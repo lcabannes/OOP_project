@@ -30,6 +30,7 @@ public class GhostBuster extends Human{
     public GhostBuster(Board board){
         super (maxHP, damage, board, reloadTime);
         setInstanceIcon(GhostBuster.classIcon);
+        setGoldCost(GOLD_COST);
     }
 
 
