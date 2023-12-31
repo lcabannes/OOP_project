@@ -34,17 +34,17 @@ public class GameInterface extends JFrame{
         AudioManage audioManage = new AudioManage();
         audioManage.loadBGMusic();
 
-        setSize(WINDOWLENGTH, WINDOWHEIGHT);
+        setSize(WINDOWLENGTH, WINDOWHEIGHT+30);
         // use a layered Pane to deal with the different layers of panels
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WINDOWLENGTH, WINDOWHEIGHT));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        Human DefaultHumanButton = new DefaultHuman(game.getBoard());
-        DefaultHumanButton.setyPos(-TILESIZE);
-        DefaultHumanButton.setxPos(0);
-        displayedEntities.add(DefaultHumanButton);
+        Human TankButton = new Tank(game.getBoard());
+        TankButton.setyPos(-TILESIZE);
+        TankButton.setxPos(0);
+        displayedEntities.add(TankButton);
 
         // Create Gunner and GhostBuster buttons
         Human gunnerButton = new Gunner(game.getBoard());
@@ -92,7 +92,7 @@ public class GameInterface extends JFrame{
                             switch(finalJ) {
                                 case 0: // DefaultHuman button
                                     System.out.println("Selected DefaultHuman");
-                                    clickedIcon = new DefaultHuman(game.getBoard());
+                                    clickedIcon = new Tank(game.getBoard());
                                     break;
                                 case 1: // Gunner button
                                     System.out.println("Selected Gunner");

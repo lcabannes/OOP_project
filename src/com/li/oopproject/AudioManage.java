@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class AudioManage {
     private String path = "Audio";
-    private String file = "DarkDescent.wav";
+    private String file = "scifi.wav";
     private Clip clip;
 
     public void loadBGMusic() {
