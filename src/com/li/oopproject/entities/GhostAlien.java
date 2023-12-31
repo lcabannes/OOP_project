@@ -12,7 +12,7 @@ public class GhostAlien extends Alien {
 
     private final static int maxHP = 30;
     private final static int speed = 1;
-    private final static int damage = 40;
+    private final static int damage = 50;
 
     private final static int reloadTime = 2000;
 

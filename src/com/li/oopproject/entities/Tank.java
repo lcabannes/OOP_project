@@ -10,11 +10,10 @@ import java.io.IOException;
 
 public class Tank extends Human {
 
-    public static final int GOLD_COST = 50;
-    private final static int reloadTime = 2000;  // reload delay in ms
-
-    private final static int maxHP = 100;
-    private final static int damage = 10;
+    public static final int GOLD_COST = 200;
+    private final static int reloadTime = 4000;  // reload delay in ms
+    private final static int maxHP = 300;
+    private final static int damage = 100;
 
     private static BufferedImage classIcon;
 
@@ -37,11 +36,16 @@ public class Tank extends Human {
         setGoldCost(GOLD_COST);
     }
 
+    @Override
+    public void upgrade(){
+        super.upgrade();
+    }
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
         Projectile bomb = new Bomb(damage, this.getBoard());
-        bomb.setxPos(this.getxPos()+50);
+        bomb.setHp(2);
+        bomb.setxPos(this.getxPos()+getLength());
         bomb.setyPos(this.getyPos());
         return bomb;
     }
