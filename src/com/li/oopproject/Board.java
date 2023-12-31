@@ -57,8 +57,8 @@ public class Board {
             goldCost = Gunner.GOLD_COST;
         }else if (human instanceof GhostBuster) {
             goldCost = GhostBuster.GOLD_COST;
-        }else if (human instanceof DefaultHuman) {
-            goldCost = DefaultHuman.GOLD_COST;
+        }else if (human instanceof Tank) {
+            goldCost = Tank.GOLD_COST;
         }
         if (goldSystem.getGold() >= goldCost) {
             if (tiles[row][col].human != null) {
