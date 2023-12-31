@@ -33,11 +33,16 @@ public class GhostBuster extends Human{
         setGoldCost(GOLD_COST);
     }
 
+    @Override
+    public void upgrade(){
+        super.upgrade();
+    }
+
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-        Projectile laser = new Laser(damage, this.getBoard());
-        laser.setxPos(this.getxPos()+50);
+        Projectile laser = new Laser(damage*3, this.getBoard());
+        laser.setxPos(this.getxPos()+getLength());
         laser.setyPos(this.getyPos());
         return laser;
     }

@@ -30,6 +30,8 @@ public class Bomb extends Projectile{
         setInstanceIcon(Bomb.classIcon);
     }
 
+
+
     public int getLength(){
         return length;
     }

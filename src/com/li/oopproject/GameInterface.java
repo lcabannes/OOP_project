@@ -30,9 +30,7 @@ public class GameInterface extends JFrame{
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
 
-        // Play bgmusic
-        AudioManage audioManage = new AudioManage();
-        audioManage.loadBGMusic();
+
 
         setSize(WINDOWLENGTH, WINDOWHEIGHT+30);
         // use a layered Pane to deal with the different layers of panels
@@ -191,6 +189,10 @@ public class GameInterface extends JFrame{
 
         this.add(layeredPane);
         setResizable(false);
+
+        // Play bgmusic just before showing the screen
+        AudioManage audioManage = new AudioManage();
+        audioManage.loadBGMusic();
         setVisible(true);
 
     }

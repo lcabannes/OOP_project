@@ -51,7 +51,7 @@ public class Collision {
 
         for (Alien alien : aliensToConsider) {
             // Check if the alien is a GhostAlien and the projectile is a Bullet
-            if (alien instanceof GhostAlien && projectile instanceof Bullet) {
+            if (alien instanceof GhostAlien && !(projectile instanceof Laser)) {
                 continue; // Skip collision check for Bullet and GhostAlien
             }
 
