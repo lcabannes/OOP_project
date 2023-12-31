@@ -89,7 +89,6 @@ public class Board {
         // search for said entity in all tiles and all entity fields of those tiles, stop when we find it
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < length; col++) {
-
                 Tile tile = this.tiles[row][col];
                 if (tile.human == entity) {
                     tile.human = null;
@@ -150,9 +149,7 @@ public class Board {
                     System.out.printf("|_");
                 } else {
                     System.out.printf("|A");
-
                 }
-
             }
             System.out.printf("|\n");
         }
@@ -168,13 +165,11 @@ public class Board {
 
         for (int row = 0; row < Board.height; row++) {
             for (int col = 0; col < Board.length; col++) {
-
                 Tile tile = tiles[row][col];
                 // if there is a human in this tile, reload the human
                 if (tile.human != null) {
-
                     tile.human.reload(elapsedTime);
-                    if (tile.human.getReloadTimeRemaining() <= 0) {
+                    if (tile.human.getReloadTimeRemaining() <= 0 & (!noAlien(row))) {
                         Projectile projectile = tile.human.attack();
                         tile.projectiles.add(projectile);
                         game.getGameInterface().addEntity(projectile);
