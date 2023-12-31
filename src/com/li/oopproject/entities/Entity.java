@@ -10,30 +10,10 @@ public abstract class Entity {
     private Board board;
     private int length = 80;
     private int height = 80;
-    public void setClassIcon(BufferedImage classIcon) {
-        this.classIcon = classIcon;
+    public void setInstanceIcon(BufferedImage Icon) {
+        this.instanceIcon = Icon;
     }
-    private BufferedImage classIcon; // each entity class must have a picture
-
-    public BufferedImage getClassIcon() {
-        return classIcon;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public int getHeight() {
-        return height;
-    }
+    private BufferedImage instanceIcon; // each entity has its own current icon
 
     public void setxPos(int xPos) {
         this.xPos = xPos;
@@ -106,4 +86,9 @@ public abstract class Entity {
     public boolean isAlive(){
         return hp>0;
     }
+
+    public BufferedImage getInstanceIcon() {
+        return instanceIcon;
+    }
 }
+

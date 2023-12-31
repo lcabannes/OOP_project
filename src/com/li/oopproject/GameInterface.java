@@ -213,7 +213,7 @@ public class GameInterface extends JFrame{
             // TODO: change this so that it is the Game class/board class that removes entities
             //  that should no longer be tracked
 
-            BufferedImage entityIcon = entity.getClassIcon();
+            BufferedImage entityIcon = entity.getInstanceIcon();
             // otherwise display it
             if (entityIcon != null) {
                 JLabel imageLabel = new JLabel(new ImageIcon(entityIcon));

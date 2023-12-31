@@ -13,11 +13,15 @@ public class DefaultAlien extends Alien{
     private final static int speed = 1;
     private final static int damage = 10;
     private final static int reloadTime = 1000;
-    {
+    private static final int length = 80;
+    private static final int height = 80;
+    private static BufferedImage classIcon;
+
+    static {
         try{
-            this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/DefaultAlien.png")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
+            DefaultAlien.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/DefaultAlien.png"));
+            DefaultAlien.classIcon = GameInterface.resizeImage(DefaultAlien.classIcon, length, height);
         }
         catch (IOException e) {
             System.out.println("No image file found for DefaultAlien");
@@ -26,5 +30,6 @@ public class DefaultAlien extends Alien{
 
     public DefaultAlien(Board board){
         super(maxHP, damage, board, speed, reloadTime);
+        setInstanceIcon(DefaultAlien.classIcon);
     }
 }

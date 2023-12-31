@@ -4,6 +4,7 @@ import com.li.oopproject.Board;
 import com.li.oopproject.GameInterface;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,20 +13,31 @@ public class OctopusAlien extends Alien {
     private final static int speed = 1;
     private final static int damage = 10;
     private final static int reloadTime = 500;
-
-
-    {
+    private static final int length = 80;
+    private static final int height = 80;
+    private final static BufferedImage classIcon;
+    // this initialization block, like all the others, tries to find the image corresponding to the laser
+    static {
+        BufferedImage classIcon1;
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/OctopusAlien.png";
         try{
-            this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/OctopusAlien.png")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
+            classIcon1 = GameInterface.resizeImage(ImageIO.read(new File(path)), length, height);
         }
         catch (IOException e) {
             System.out.println("No image file found for OctopusAlien");
+            classIcon1 = null;
         }
+        classIcon = classIcon1;
     }
+
     public OctopusAlien(Board board){
         super(maxHP, damage, board, speed, reloadTime);
+        setInstanceIcon(OctopusAlien.classIcon);
+    }
+
+    public int getLength(){
+        return length;
     }
 
 }

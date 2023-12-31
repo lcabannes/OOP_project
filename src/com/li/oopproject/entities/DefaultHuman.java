@@ -4,6 +4,7 @@ import com.li.oopproject.Board;
 import com.li.oopproject.GameInterface;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,20 +14,24 @@ public class DefaultHuman extends Human {
     private final static int maxHP = 100;
     private final static int damage = 10;
 
-    {
+    private static BufferedImage classIcon;
+
+    static {
+
         try{
-            this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/DefaultHuman.jpg")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
+            classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/DefaultHuman.jpg"));
+            classIcon = GameInterface.resizeImage(DefaultHuman.classIcon, getLength(), getHeight());
         }
         catch (IOException e) {
             System.out.println("No image file found for DefaultHuman");
         }
+
     }
 
     public DefaultHuman(Board board){
-
         super (maxHP, damage, board, reloadTime);
+        setInstanceIcon(DefaultHuman.classIcon);
     }
 
 

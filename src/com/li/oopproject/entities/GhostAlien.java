@@ -4,6 +4,7 @@ import com.li.oopproject.Board;
 import com.li.oopproject.GameInterface;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,11 +16,16 @@ public class GhostAlien extends Alien {
 
     private final static int reloadTime = 2000;
 
-    {
+    private static final int length = 80;
+    private static final int height = 80;
+
+    private static BufferedImage classIcon;
+
+    static {
         try{
-            this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/GhostAlien.png")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
+            GhostAlien.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Aliens/GhostAlien.png"));
+            GhostAlien.classIcon = GameInterface.resizeImage(GhostAlien.classIcon, length, height);
         }
         catch (IOException e) {
             System.out.println("No image file found for GhostAlien");
@@ -27,5 +33,6 @@ public class GhostAlien extends Alien {
     }
     public GhostAlien(Board board){
         super(maxHP, damage, board, speed, reloadTime);
+        setInstanceIcon(GhostAlien.classIcon);
     }
 }

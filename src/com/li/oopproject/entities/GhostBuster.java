@@ -4,6 +4,7 @@ import com.li.oopproject.Board;
 import com.li.oopproject.GameInterface;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,12 +13,13 @@ public class GhostBuster extends Human{
     private final static int maxHP = 100;
     private final static int damage = 10;
 
+    private static BufferedImage classIcon;
 
-    {
+    static {
         try{
-            this.setClassIcon(ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBuster.png")));
-            this.setClassIcon(GameInterface.resizeImage(this.getClassIcon(), getLength(), getHeight()));
+            GhostBuster.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBuster.png"));
+            GhostBuster.classIcon = GameInterface.resizeImage(GhostBuster.classIcon, getLength(), getHeight());
         }
         catch (IOException e) {
             System.out.println("No image file found for GhostBuster");
@@ -25,8 +27,8 @@ public class GhostBuster extends Human{
     }
 
     public GhostBuster(Board board){
-
         super (maxHP, damage, board, reloadTime);
+        setInstanceIcon(GhostBuster.classIcon);
     }
 
 
