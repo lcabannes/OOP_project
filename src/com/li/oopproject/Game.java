@@ -66,13 +66,8 @@ public class Game {
         }
 
         // use the eventQueue invoke later to execute the Graphical interface update in the EDT
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                gameInterface = new GameInterface(Game.this);
-            }
 
-        });
+        gameInterface = new GameInterface(Game.this);
 
         // define a basic alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
         // and prints the board every time

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class GameInterface extends JFrame{
     public static final int TILESIZE = 100;
     public static final int WINDOWLENGTH = Board.length * TILESIZE;
-    public static final int WINDOWHEIGHT = (Board.height+1) * TILESIZE;
+    public static final int WINDOWHEIGHT = 30 + (Board.height+1) * TILESIZE;
     private Game game;
     private JPanel buttonPanel;
     private JPanel backGroundPanel;
@@ -29,10 +29,6 @@ public class GameInterface extends JFrame{
     public GameInterface(Game game) {
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
-
-        // Play bgmusic
-        AudioManage audioManage = new AudioManage();
-        audioManage.loadBGMusic();
 
         setSize(WINDOWLENGTH, WINDOWHEIGHT);
         // use a layered Pane to deal with the different layers of panels
@@ -191,6 +187,9 @@ public class GameInterface extends JFrame{
         setResizable(false);
         setVisible(true);
 
+        // Play bgmusic
+        AudioManage audioManage = new AudioManage();
+        audioManage.loadBGMusic();
 
     }
     // method to resize an image
