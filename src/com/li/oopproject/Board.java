@@ -67,10 +67,14 @@ public class Board {
             human.setyPos(row * 100);
             tiles[row][col].human = human;
             goldSystem.addGold(-goldCost); // Deduct gold
-            System.out.println("Gold after deduct: " + goldSystem.getGold());
+            if (Game.VERBOSE){
+                System.out.println("Gold after deduct: " + goldSystem.getGold());
+            }
             return true;
         } else {
-            System.out.println("Not enough gold to place this human");
+            if (Game.VERBOSE){
+                System.out.println("Not enough gold to place this human");
+            }
             return false;
         }
     }

@@ -14,7 +14,9 @@ public class GoldSystem  {
 
     public void addGold(int amount) {
         gold += amount;
-        System.out.println("Current gold: " + gold); // Print the current gold amount
+        if (Game.VERBOSE){
+            System.out.println("Current gold: " + gold); // Print the current gold amount
+        }
     }
 
     public int getGold() {

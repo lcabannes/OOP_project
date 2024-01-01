@@ -32,7 +32,6 @@ public class GameInterface extends JFrame{
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
 
-
         // small extension to the frame to account for some unknown offset probably due to frame/button borders
         setSize(WINDOWLENGTH+15, WINDOWHEIGHT+40);
         // use a layered Pane to deal with the different layers of panels
@@ -60,7 +59,6 @@ public class GameInterface extends JFrame{
         // Initialize the game info panel
         JPanel gameInfoPanel = initializeGameInfoPanel();
 
-
         // foreground panel is where all entities are placed
         foreGroundPanel = new JPanel();
         foreGroundPanel.setBackground(new Color(0, 0, 0, 0));
@@ -68,7 +66,6 @@ public class GameInterface extends JFrame{
         foreGroundPanel.setLayout(null);
         //set all bounds of panels to the same so that they do overlap
         backGroundPanel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
-
 
         // Set bounds and other properties for the buttonPanel
         buttonPanel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT); // Set the size and position
@@ -155,7 +152,6 @@ public class GameInterface extends JFrame{
                     break;
                 case 2:
                     selectionButton = new Freezer(game.getBoard());
-
                     break;
                 case 3:
                     selectionButton = new Tank(game.getBoard());
@@ -201,9 +197,9 @@ public class GameInterface extends JFrame{
                             // when clicked try to place a human at this position, message the user about the outcome
                             if (clickedIcon != null) {
                                 if (clickedIcon instanceof Human){
-                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem)) {
+                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem) & Game.VERBOSE) {
                                         System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
-                                    } else {
+                                    } else if (Game.VERBOSE){
                                         System.out.println("You cannot place this turret here");
                                     }
                                 }
@@ -213,8 +209,10 @@ public class GameInterface extends JFrame{
                                         if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
                                             human.upgrade();
                                             goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
-                                            System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
-                                        } else {
+                                            if (Game.VERBOSE){
+                                                System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
+                                            }
+                                        } else if (Game.VERBOSE){
                                             System.out.println("You cannot upgrade this turret");
                                         }
                                     }
@@ -319,17 +317,8 @@ public class GameInterface extends JFrame{
             i++;
         }
         addCostLabels(); // Display the  cost labels
+    }
 
-    }
-    private JButton getButtonAt(int row, int col) {
-        Component[] components = buttonPanel.getComponents();
-        int index = row * ((GridLayout) buttonPanel.getLayout()).getColumns() + col;
-        if (index >= 0 && index < components.length && components[index] instanceof JButton) {
-            return (JButton) components[index];
-        } else {
-            throw new IllegalArgumentException("Invalid row or column specified.");
-        }
-    }
     //stop tracking an entity
     public void removeEntity(Entity entity){
         displayedEntities.remove(entity);
