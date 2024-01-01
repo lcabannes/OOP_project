@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class GameInterface extends JFrame{
     public static final int TILESIZE = 100;
-    public static final int WINDOWLENGTH = Board.length * TILESIZE + 100;
-    public static final int WINDOWHEIGHT = 30 + (Board.height+1) * TILESIZE;
+    public static final int WINDOWLENGTH = Board.length * TILESIZE;
+    public static final int WINDOWHEIGHT = (Board.height+1) * TILESIZE;
     private Game game;
     private JPanel buttonPanel;
     private JPanel backGroundPanel;
@@ -32,7 +32,9 @@ public class GameInterface extends JFrame{
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
 
-        setSize(WINDOWLENGTH, WINDOWHEIGHT+30);
+
+        // small extension to the frame to account for some unknown offset probably due to frame/button borders
+        setSize(WINDOWLENGTH+15, WINDOWHEIGHT+40);
         // use a layered Pane to deal with the different layers of panels
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WINDOWLENGTH, WINDOWHEIGHT));
@@ -153,7 +155,7 @@ public class GameInterface extends JFrame{
         // try to load the backGround image
         try {
             BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/Background1.png"));
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/default_background.png"));
             JLabel picLabel = new JLabel(new ImageIcon(myPicture));
             backGroundPanel.add(picLabel);
         }
@@ -279,8 +281,8 @@ public class GameInterface extends JFrame{
                 //idk if the next line is useful or not, might need more testing
                 //   imageLabel.setOpaque(false);
                 foreGroundPanel.add(imageLabel);
-                //place it at its current position
-                imageLabel.setBounds(entity.getxPos(), entity.getyPos()+TILESIZE, entityIcon.getWidth(), entityIcon.getHeight());
+                //place it at its current position + some offset so that it appears in the middle of the tile
+                imageLabel.setBounds(entity.getxPos()+10, entity.getyPos()+TILESIZE+15, entityIcon.getWidth(), entityIcon.getHeight());
             } else {
                 System.out.println("Failed to load the image.");
             }
