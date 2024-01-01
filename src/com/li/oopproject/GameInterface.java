@@ -41,7 +41,7 @@ public class GameInterface extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        initializeButtons();
+        initializeSelectionButtons();
 
         // button panels contains transparent buttons and one additional row to choose which human to select to place
         // TODO: top selection row
@@ -49,159 +49,17 @@ public class GameInterface extends JFrame{
         buttonPanel.setLayout(new GridLayout(Board.height+1, Board.length));
         buttonPanel.setBackground(new Color(0, 0, 0, 0));
         buttonPanel.setOpaque(false);
-        for (int i=0; i< Board.height+1; i++){
-            for (int j=0; j<Board.length; j++){
-                // use effectively final variables to allow the actionListener to know its position
-                final int finalI = i;
-                final int finalJ = j;
-                JButton button = new JButton();
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (finalI > 0) {
-                            // when clicked try to place a human at this position, message the user about the outcome
-                            if (clickedIcon != null) {
-                                if (clickedIcon instanceof Human){
-                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem)) {
-                                        System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
-                                    } else {
-                                        System.out.println("You cannot place this turret here");
-                                    }
-                                }
-                                else{
-                                    Human human = game.getBoard().tiles[finalI-1][finalJ].human;
-                                    if (clickedIcon instanceof Upgrade){
-                                        if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
-                                            human.upgrade();
-                                            System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
-                                        } else {
-                                            System.out.println("You cannot upgrade this turret");
-                                        }
-                                    }
-                                }
-                            }
-                            displayedEntities.remove(clickedIcon);
-                            clickedIcon = null;
-
-                        }
-                        else {
-                            // Top row button logic for selecting an entity
-                            displayedEntities.remove(clickedIcon);
-                            clickedIcon = null;
-
-                            switch(finalJ) {
-                                case 0: // DefaultHuman button
-                                    System.out.println("Selected DefaultHuman");
-                                    clickedIcon = new Tank(game.getBoard());
-                                    break;
-                                case 1: // Gunner button
-                                    System.out.println("Selected Gunner");
-                                    clickedIcon = new Gunner(game.getBoard());
-                                    break;
-                                case 2: // GhostBuster button
-                                    System.out.println("Selected GhostBuster");
-                                    clickedIcon = new GhostBuster(game.getBoard());
-                                    break;
-                                case 3: // Freezer
-                                    System.out.println("Selected Freezer");
-                                    clickedIcon = new Freezer(game.getBoard());
-                                    break;
-                                case 5: // upgrade button
-                                    clickedIcon = new Upgrade(game.getBoard());
-                                default:
-                                    // Handle other cases or do nothing
-                                    break;
-                            }
-
-                            if (clickedIcon != null) {
-                                clickedIcon.setxPos(0);
-                                clickedIcon.setyPos(-TILESIZE);
-                                displayedEntities.add(clickedIcon);
-                            }
-                        }
-                    }
-                });
-
-                button.addMouseMotionListener(new MouseMotionListener() {
-                    @Override
-                    public void mouseDragged(MouseEvent e) {
-                        if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
-                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
-                        }
-                    }
-
-                    // the finalI-1 comes from the fact that we are giving position to entities based on the
-                    // the board but there is an aditional row of buttons in the graphical interface
-                    // so the indexation is different, the positions also, we might want to armonize
-                    // the position later
-                    @Override
-                    public void mouseMoved(MouseEvent e) {
-                        if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
-                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
-                        }
-                    }
-
-                });
-                // Set the button's background color to transparent
-                button.setBackground(new Color(0, 0, 0, 0)); // Transparent color (alpha = 0)
-                // Make the button's content area transparent
-                button.setOpaque(false);
-                button.setBorder(null); // set no border for aesthetics
-                buttonPanel.add(button);
-            }
-        }
+        initializeButtonPanel();
 
         // background panel to hold the background image
         backGroundPanel = new JPanel();
 
         // try to load the backGround image
-        try {
-
-            String path = "";
-            if (game.getBoard().getBoardType() == 0){
-                path = GameInterface.class.getProtectionDomain().
-                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/default_background.png";
-            }
-            else if (game.getBoard().getBoardType() == 1){
-                path = GameInterface.class.getProtectionDomain().
-                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/portal_background.png";
-            }
-            BufferedImage myPicture = ImageIO.read(new File(path));
-            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-            backGroundPanel.add(picLabel);
-        }
-        catch (IOException e) {
-            System.out.println("No file found");
-        }
+        loadBackgroundImage();
 
         // Initialize the game info panel
-        JPanel gameInfoPanel = new JPanel();
-        gameInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        int panelWidth = 180;
-        int panelHeight = 30;
-        int rightMargin = 20;
-        int topMargin = 10;
+        JPanel gameInfoPanel = initializeGameInfoPanel();
 
-        // Set bounds to position it at the top right corner
-        gameInfoPanel.setBounds(WINDOWLENGTH - panelWidth - rightMargin, topMargin, panelWidth, panelHeight);
-
-        // Create a Font object for the labels
-        Font labelFont = new Font("Arial", Font.BOLD, 14);
-
-        // Initialize labels for wave, HP, and gold
-        waveLabel = new JLabel("Wave: 0");
-        hpLabel = new JLabel("HP: 3"); // Assuming starting HP is 100
-        goldLabel = new JLabel("Gold: 100");
-
-        // Set the font for all labels
-        setFontForLabels(labelFont, waveLabel, hpLabel, goldLabel);
-
-        // Add labels to the panel
-        gameInfoPanel.add(waveLabel);
-        gameInfoPanel.add(hpLabel);
-        gameInfoPanel.add(goldLabel);
 
         // foreground panel is where all entities are placed
         foreGroundPanel = new JPanel();
@@ -233,36 +91,86 @@ public class GameInterface extends JFrame{
         // Play bgmusic just before showing the screen
         AudioManage audioManage = new AudioManage();
         audioManage.loadBGMusic();
-        setVisible(true);
 
+        setVisible(true);
     }
 
-    public void initializeButtons(){
-        Human TankButton = new Tank(game.getBoard());
-        TankButton.setyPos(-TILESIZE);
-        TankButton.setxPos(0);
-        displayedEntities.add(TankButton);
+    public void loadBackgroundImage(){
+        try {
+            String path = "";
+            if (game.getBoard().getBoardType() == 0){
+                path = GameInterface.class.getProtectionDomain().
+                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/default_background.png";
+            }
+            else if (game.getBoard().getBoardType() == 1){
+                path = GameInterface.class.getProtectionDomain().
+                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/portal_background.png";
+            }
+            BufferedImage myPicture = ImageIO.read(new File(path));
+            JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+            backGroundPanel.add(picLabel);
+        }
+        catch (IOException e) {
+            System.out.println("No background file found");
+        }
+    }
 
-        // Create Gunner and GhostBuster buttons
-        Human gunnerButton = new Gunner(game.getBoard());
-        gunnerButton.setyPos(-TILESIZE);
-        gunnerButton.setxPos(TILESIZE); // Adjust X position for Gunner
-        displayedEntities.add(gunnerButton);
+    public JPanel initializeGameInfoPanel(){
+        JPanel gameInfoPanel = new JPanel();
+        gameInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        int panelWidth = 180;
+        int panelHeight = 30;
+        int rightMargin = 20;
+        int topMargin = 10;
 
-        Human ghostBusterButton = new GhostBuster(game.getBoard());
-        ghostBusterButton.setyPos(-TILESIZE);
-        ghostBusterButton.setxPos(2 * TILESIZE); // Adjust X position for GhostBuster
-        displayedEntities.add(ghostBusterButton);
+        // Set bounds to position it at the top right corner
+        gameInfoPanel.setBounds(WINDOWLENGTH - panelWidth - rightMargin, topMargin, panelWidth, panelHeight);
 
-        Human freezerButton = new Freezer(game.getBoard());
-        freezerButton.setyPos(-TILESIZE);
-        freezerButton.setxPos(3 * TILESIZE); // Adjust X position for GhostBuster
-        displayedEntities.add(freezerButton);
+        // Create a Font object for the labels
+        Font labelFont = new Font("Arial", Font.BOLD, 14);
 
-        Entity UpgradeButton = new Upgrade(game.getBoard());
-        UpgradeButton.setyPos(-TILESIZE);
-        UpgradeButton.setxPos(5 * TILESIZE); // Adjust X position for Upgrade button
-        displayedEntities.add(UpgradeButton);
+        // Initialize labels for wave, HP, and gold
+        waveLabel = new JLabel("Wave: 0");
+        hpLabel = new JLabel("HP: 3"); // Assuming starting HP is 100
+        goldLabel = new JLabel("Gold: 100");
+
+        // Set the font for all labels
+        setFontForLabels(labelFont, waveLabel, hpLabel, goldLabel);
+
+        // Add labels to the panel
+        gameInfoPanel.add(waveLabel);
+        gameInfoPanel.add(hpLabel);
+        gameInfoPanel.add(goldLabel);
+        return gameInfoPanel;
+    }
+    public void initializeSelectionButtons(){
+        for (int xpos = 0; xpos<Board.length; xpos++){
+            Entity selectionButton = null;
+            switch(xpos){
+                case 0:
+                    selectionButton = new Gunner(game.getBoard());
+                    break;
+                case 1:
+                    selectionButton = new GhostBuster(game.getBoard());
+                    break;
+                case 2:
+                    selectionButton = new Freezer(game.getBoard());
+
+                    break;
+                case 3:
+                    selectionButton = new Tank(game.getBoard());
+                    break;
+                case 5:
+                    selectionButton = new Upgrade(game.getBoard());
+                    break;
+            }
+            if (selectionButton != null){
+                selectionButton.setyPos(-TILESIZE);
+                selectionButton.setxPos(xpos * TILESIZE);
+                displayedEntities.add(selectionButton);
+            }
+        }
+
     }
     // method to resize an image
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -277,6 +185,110 @@ public class GameInterface extends JFrame{
     // add entity to track it during display
     public void addEntity(Entity entity){
         displayedEntities.add(entity);
+    }
+
+    public void initializeButtonPanel(){
+        for (int i=0; i< Board.height+1; i++){
+            for (int j=0; j<Board.length; j++){
+                // use effectively final variables to allow the actionListener to know its position
+                final int finalI = i;
+                final int finalJ = j;
+                JButton button = new JButton();
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (finalI > 0) {
+                            // when clicked try to place a human at this position, message the user about the outcome
+                            if (clickedIcon != null) {
+                                if (clickedIcon instanceof Human){
+                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem)) {
+                                        System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
+                                    } else {
+                                        System.out.println("You cannot place this turret here");
+                                    }
+                                }
+                                else{
+                                    Human human = game.getBoard().tiles[finalI-1][finalJ].human;
+                                    if (clickedIcon instanceof Upgrade){
+                                        if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
+                                            human.upgrade();
+                                            goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
+                                            System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
+                                        } else {
+                                            System.out.println("You cannot upgrade this turret");
+                                        }
+                                    }
+                                }
+                            }
+                            displayedEntities.remove(clickedIcon);
+                            clickedIcon = null;
+
+                        }
+                        else {
+                            // Top row button logic for selecting an entity
+                            displayedEntities.remove(clickedIcon);
+                            clickedIcon = null;
+
+                            switch(finalJ) {
+                                case 0: // DefaultHuman button
+                                    clickedIcon = new Gunner(game.getBoard());
+                                    break;
+                                case 1: // Gunner button
+                                    clickedIcon = new GhostBuster(game.getBoard());
+                                    break;
+                                case 2: // GhostBuster button
+                                    clickedIcon = new Freezer(game.getBoard());
+                                    break;
+                                case 3: // Freezer
+                                    clickedIcon = new Tank(game.getBoard());
+                                    break;
+                                case 5: // upgrade button
+                                    clickedIcon = new Upgrade(game.getBoard());
+                                default:
+                                    // Handle other cases or do nothing
+                                    break;
+                            }
+
+                            if (clickedIcon != null) {
+                                clickedIcon.setxPos(0);
+                                clickedIcon.setyPos(-TILESIZE);
+                                displayedEntities.add(clickedIcon);
+                            }
+                        }
+                    }
+                });
+
+                button.addMouseMotionListener(new MouseMotionListener() {
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+                        if (clickedIcon != null){
+                            // -40 offset to make the icon centered on the mouse
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE)-40);
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE)-40);
+                        }
+                    }
+
+                    // the finalI-1 comes from the fact that we are giving position to entities based on the
+                    // the board but there is an aditional row of buttons in the graphical interface
+                    // so the indexation is different, the positions also, we might want to armonize
+                    // the position later
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                        if (clickedIcon != null){
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE) - 40);
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE) - 40);
+                        }
+                    }
+
+                });
+                // Set the button's background color to transparent
+                button.setBackground(new Color(0, 0, 0, 0)); // Transparent color (alpha = 0)
+                // Make the button's content area transparent
+                button.setOpaque(false);
+                button.setBorder(null); // set no border for aesthetics
+                buttonPanel.add(button);
+            }
+        }
     }
     public void display(){
         // remove all Entities (because they have changed position but also appearance (red/attacking/damaged)

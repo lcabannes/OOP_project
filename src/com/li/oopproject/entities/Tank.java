@@ -51,14 +51,15 @@ public class Tank extends Human {
     @Override
     public void upgrade(){
         super.upgrade();
-
         setInstanceIcon(upgradedClassIcon);
     }
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
         Projectile bomb = new Bomb(damage, this.getBoard());
-        bomb.setHp(2);
+        if (isUpgraded()){
+            bomb.setHp(2);
+        }
         bomb.setxPos(this.getxPos()+getLength());
         bomb.setyPos(this.getyPos());
         return bomb;
