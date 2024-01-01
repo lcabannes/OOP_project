@@ -6,7 +6,7 @@ import com.li.oopproject.entities.*;
 
 
 public class Board {
-    private String name;
+    private int boardType;
     Tile[][] tiles = new Tile[height][length];
     private Tile entrance;
     private Tile exit;
@@ -16,10 +16,14 @@ public class Board {
     private final Game game;
     private Collision collision;//check collision
 
+    public int getBoardType() {
+        return boardType;
+    }
+
     private final GoldSystem goldSystem = new GoldSystem();
 
-    public Board(Game game) {
-        this.name = "default_board";
+    public Board(Game game, int boardType) {
+        this.boardType = boardType;
         this.game = game;
         for (int row = 0; row < Board.height; row++) {
             for (int col = 0; col < Board.length; col++) {

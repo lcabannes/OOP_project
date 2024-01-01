@@ -31,7 +31,7 @@ public class Game {
     private int hp = 3;
     private final Timer AlienSpawner;
     private final ArrayList<String> spawnableAliens = new ArrayList<>();
-    private int boardType;
+
 
     public Board getBoard() {
         return board;
@@ -40,10 +40,9 @@ public class Game {
     public Game(int level, int mode, int boardType){
         this.level = level;
         this.currentWave = 1;
-        this.board = new Board(this);
+        this.board = new Board(this, boardType);
         //variables to handle different mode(game mode)
         this.mode = mode;
-        this.boardType = boardType;
 
         // Set wave number based on mode
         switch(this.mode) {

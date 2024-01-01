@@ -154,8 +154,17 @@ public class GameInterface extends JFrame{
 
         // try to load the backGround image
         try {
-            BufferedImage myPicture = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/default_background.png"));
+
+            String path = "";
+            if (game.getBoard().getBoardType() == 0){
+                path = GameInterface.class.getProtectionDomain().
+                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/default_background.png";
+            }
+            else if (game.getBoard().getBoardType() == 1){
+                path = GameInterface.class.getProtectionDomain().
+                        getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/backGround/portal_background.png";
+            }
+            BufferedImage myPicture = ImageIO.read(new File(path));
             JLabel picLabel = new JLabel(new ImageIcon(myPicture));
             backGroundPanel.add(picLabel);
         }

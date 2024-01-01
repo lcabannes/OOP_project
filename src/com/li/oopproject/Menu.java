@@ -53,7 +53,7 @@ public class Menu extends JFrame {
         String[] boards = {"default board", "portal board"};
 
         JComboBox<String> boardDropdown = new JComboBox<>(boards);
-        modeDropdown.addActionListener(new ActionListener() {
+        boardDropdown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox)e.getSource();

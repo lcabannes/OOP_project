@@ -36,12 +36,14 @@ public class GhostBuster extends Human{
     @Override
     public void upgrade(){
         super.upgrade();
+        setDamage(getDamage() * 3);
     }
 
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-        Projectile laser = new Laser(damage*3, this.getBoard());
+
+        Projectile laser = new Laser(damage, this.getBoard());
         laser.setxPos(this.getxPos()+getLength());
         laser.setyPos(this.getyPos());
         return laser;
