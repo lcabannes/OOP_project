@@ -197,9 +197,9 @@ public class GameInterface extends JFrame{
                             // when clicked try to place a human at this position, message the user about the outcome
                             if (clickedIcon != null) {
                                 if (clickedIcon instanceof Human){
-                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem) & game.VERBOSE) {
+                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem) & Game.VERBOSE) {
                                         System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
-                                    } else if (game.VERBOSE){
+                                    } else if (Game.VERBOSE){
                                         System.out.println("You cannot place this turret here");
                                     }
                                 }
@@ -209,10 +209,10 @@ public class GameInterface extends JFrame{
                                         if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
                                             human.upgrade();
                                             goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
-                                            if (game.VERBOSE){
+                                            if (Game.VERBOSE){
                                                 System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
                                             }
-                                        } else if (game.VERBOSE){
+                                        } else if (Game.VERBOSE){
                                             System.out.println("You cannot upgrade this turret");
                                         }
                                     }
