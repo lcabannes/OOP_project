@@ -26,6 +26,8 @@ public class GameInterface extends JFrame{
     private Entity clickedIcon = null;
     private GoldSystem goldSystem;
 
+    private JLabel waveLabel, hpLabel, goldLabel; // For update game info
+
     public GameInterface(Game game) {
         this.game = game;
         this.goldSystem = game.getBoard().getGoldSystem();
@@ -161,8 +163,32 @@ public class GameInterface extends JFrame{
             System.out.println("No file found");
         }
 
-        // initialize a layered pane which will contain the backgroundPanel, ForeGround panel and Button Panel
-        layeredPane.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
+        // Initialize the game info panel
+        JPanel gameInfoPanel = new JPanel();
+        gameInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        int panelWidth = 180;
+        int panelHeight = 30;
+        int rightMargin = 20;
+        int topMargin = 10;
+
+        // Set bounds to position it at the top right corner
+        gameInfoPanel.setBounds(WINDOWLENGTH - panelWidth - rightMargin, topMargin, panelWidth, panelHeight);
+
+        // Create a Font object for the labels
+        Font labelFont = new Font("Arial", Font.BOLD, 14);
+
+        // Initialize labels for wave, HP, and gold
+        waveLabel = new JLabel("Wave: 0");
+        hpLabel = new JLabel("HP: 3"); // Assuming starting HP is 100
+        goldLabel = new JLabel("Gold: 100");
+
+        // Set the font for all labels
+        setFontForLabels(labelFont, waveLabel, hpLabel, goldLabel);
+
+        // Add labels to the panel
+        gameInfoPanel.add(waveLabel);
+        gameInfoPanel.add(hpLabel);
+        gameInfoPanel.add(goldLabel);
 
         // foreground panel is where all entities are placed
         foreGroundPanel = new JPanel();
@@ -184,6 +210,7 @@ public class GameInterface extends JFrame{
         layeredPane.add(backGroundPanel, Integer.valueOf(1));
         layeredPane.add(foreGroundPanel, Integer.valueOf(2));
         layeredPane.add(buttonPanel, Integer.valueOf(3));
+        layeredPane.add(gameInfoPanel, Integer.valueOf(4));
 
         //add layeredPane to main GameInterface
 
@@ -216,7 +243,7 @@ public class GameInterface extends JFrame{
 
         Entity UpgradeButton = new Upgrade(game.getBoard());
         UpgradeButton.setyPos(-TILESIZE);
-        UpgradeButton.setxPos(5 * TILESIZE); // Adjust X position for GhostBuster
+        UpgradeButton.setxPos(5 * TILESIZE); // Adjust X position for Upgrade button
         displayedEntities.add(UpgradeButton);
     }
     // method to resize an image
@@ -276,5 +303,20 @@ public class GameInterface extends JFrame{
     public void removeEntity(Entity entity){
         displayedEntities.remove(entity);
     }
+
+    // Set label font for all the game info label
+    public void setFontForLabels(Font font, JLabel... labels) {
+        for (JLabel label : labels) {
+            label.setFont(font);
+        }
+    }
+
+    public void updateGameInfo(int wave, int hp, int gold) {
+        waveLabel.setText("Wave: " + wave);
+        hpLabel.setText("HP: " + hp);
+        goldLabel.setText("Gold: " + gold);
+    }
 }
+
+
 
