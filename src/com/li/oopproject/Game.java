@@ -31,17 +31,19 @@ public class Game {
     private int hp = 3;
     private final Timer AlienSpawner;
     private final ArrayList<String> spawnableAliens = new ArrayList<>();
+    private int boardType;
 
     public Board getBoard() {
         return board;
     }
 
-    public Game(int level, int mode){
+    public Game(int level, int mode, int boardType){
         this.level = level;
         this.currentWave = 1;
         this.board = new Board(this);
         //variables to handle different mode(game mode)
         this.mode = mode;
+        this.boardType = boardType;
 
         // Set wave number based on mode
         switch(this.mode) {
@@ -115,7 +117,8 @@ public class Game {
     public void spawnAlien() {
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
-        Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition);
+        int xSpawnPosition = Board.length - randomInt.nextInt(3);
+        Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition, xSpawnPosition);
         gameInterface.addEntity(alien);
     }
 

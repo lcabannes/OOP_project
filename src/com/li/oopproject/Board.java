@@ -107,7 +107,7 @@ public class Board {
     }
 
     // Spawn different types of alien
-    public Alien spawnAlien(String alienName, int yposition) {
+    public Alien spawnAlien(String alienName, int yposition, int xposition) {
         Alien newAlien;
         switch (alienName) {
             // Spawn different type of Aliens
@@ -127,9 +127,9 @@ public class Board {
                 System.out.println("Tried to spawn unknown alien name");
                 newAlien = new DefaultAlien(this);
         }
-        newAlien.setxPos(Board.length * 100);
+        newAlien.setxPos(xposition * 100);
         newAlien.setyPos(yposition * 100);
-        this.tiles[yposition][Board.length - 1].aliens.add(newAlien);
+        this.tiles[yposition][xposition - 1].aliens.add(newAlien);
         return newAlien;
     }
 
