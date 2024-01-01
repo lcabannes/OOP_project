@@ -16,7 +16,7 @@ public class Game {
     private final static int[] waveDuration = {10000, 20000, 20000, 20000, 20000, 20000, 20000}; // waves duration in ms
     private int timeSinceWaveStart = 0;
     private GameInterface gameInterface;
-    private final boolean VERBOSE = true;
+    public final boolean VERBOSE = false;
     private int level;
 
     private int mode;
