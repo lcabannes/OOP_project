@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 public class Menu extends JFrame {
     private int selectedMode;
+    private int selectedBoard;
 
     public Menu() {
 
@@ -49,9 +50,29 @@ public class Menu extends JFrame {
             }
         });
 
+        String[] boards = {"default board", "portal board"};
+
+        JComboBox<String> boardDropdown = new JComboBox<>(boards);
+        boardDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String selected = (String)cb.getSelectedItem();
+                switch (selected) {
+                    case "default board":
+                        selectedBoard = 0;
+                        break;
+                    case "portal board":
+                        selectedBoard = 1;
+                }
+            }
+        });
+
         // Add components to the main panel
         mainPanel.add(modeDropdown, BorderLayout.NORTH);
         mainPanel.add(newGameButton, BorderLayout.CENTER);
+        mainPanel.add(boardDropdown, BorderLayout.SOUTH);
+
 
         // Frame properties
         setTitle("Game Menu");
@@ -64,6 +85,6 @@ public class Menu extends JFrame {
 
     private void startGame() {
         System.out.println("Game is starting in mode: " + selectedMode);
-        Main.startGame(selectedMode); // Pass the selected mode to the game
+        Main.startGame(selectedMode, selectedBoard); // Pass the selected mode to the game
     }
 }

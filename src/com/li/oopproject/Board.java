@@ -6,7 +6,7 @@ import com.li.oopproject.entities.*;
 
 
 public class Board {
-    private String name;
+    private int boardType;
     Tile[][] tiles = new Tile[height][length];
     private Tile entrance;
     private Tile exit;
@@ -16,10 +16,14 @@ public class Board {
     private final Game game;
     private Collision collision;//check collision
 
+    public int getBoardType() {
+        return boardType;
+    }
+
     private final GoldSystem goldSystem = new GoldSystem();
 
-    public Board(Game game) {
-        this.name = "default_board";
+    public Board(Game game, int boardType) {
+        this.boardType = boardType;
         this.game = game;
         for (int row = 0; row < Board.height; row++) {
             for (int col = 0; col < Board.length; col++) {
@@ -107,7 +111,7 @@ public class Board {
     }
 
     // Spawn different types of alien
-    public Alien spawnAlien(String alienName, int yposition) {
+    public Alien spawnAlien(String alienName, int yposition, int xposition) {
         Alien newAlien;
         switch (alienName) {
             // Spawn different type of Aliens
@@ -127,9 +131,9 @@ public class Board {
                 System.out.println("Tried to spawn unknown alien name");
                 newAlien = new DefaultAlien(this);
         }
-        newAlien.setxPos(Board.length * 100);
+        newAlien.setxPos(xposition * 100);
         newAlien.setyPos(yposition * 100);
-        this.tiles[yposition][Board.length - 1].aliens.add(newAlien);
+        this.tiles[yposition][xposition - 1].aliens.add(newAlien);
         return newAlien;
     }
 
