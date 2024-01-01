@@ -17,6 +17,8 @@ public class Gunner extends Human{
     private final static int damage = 10;
 
     private final static BufferedImage classIcon;
+    private static BufferedImage upgradedClassIcon;
+
     static {
         BufferedImage classIcon1;
         String path = GameInterface.class.getProtectionDomain().
@@ -29,6 +31,16 @@ public class Gunner extends Human{
             classIcon1 = null;
         }
         classIcon = classIcon1;
+
+        path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedGunner.png";
+        try{
+            upgradedClassIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded Gunner");
+            upgradedClassIcon = null;
+        }
     }
 
     public Gunner(Board board){
@@ -39,24 +51,14 @@ public class Gunner extends Human{
     @Override
     public void upgrade(){
         super.upgrade();
-        BufferedImage upgradedIcon;
-        String path = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedGunner.png";
-        try{
-            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
-        }
-        catch (IOException e) {
-            System.out.println("No image file found for upgraded Gunner");
-            upgradedIcon = null;
-        }
-        setInstanceIcon(upgradedIcon);
+        setInstanceIcon(upgradedClassIcon);
     }
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
         Projectile bullet = new Bullet(damage, this.getBoard());
         if (isUpgraded()){
-            setReloadTimeRemaining(1000);
+            setReloadTimeRemaining(500);
         }
         bullet.setxPos(this.getxPos()+50);
         bullet.setyPos(this.getyPos());

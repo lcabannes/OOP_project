@@ -17,6 +17,9 @@ public class Freezer extends Human{
     private final static int damage = 10;
 
     private final static BufferedImage classIcon;
+
+    private final static BufferedImage upgradedClassIcon;
+
     static {
         BufferedImage classIcon1;
         String path = GameInterface.class.getProtectionDomain().
@@ -29,6 +32,19 @@ public class Freezer extends Human{
             classIcon1 = null;
         }
         classIcon = classIcon1;
+
+
+        path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedFreezer.png";
+        BufferedImage upgradedClassIcon1;
+        try{
+            upgradedClassIcon1 = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded Freezer");
+            upgradedClassIcon1 = null;
+        }
+        upgradedClassIcon = upgradedClassIcon1;
     }
 
     public Freezer(Board board){
@@ -39,17 +55,7 @@ public class Freezer extends Human{
     @Override
     public void upgrade(){
         super.upgrade();
-        BufferedImage upgradedIcon;
-        String path = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedFreezer.png";
-        try{
-            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
-        }
-        catch (IOException e) {
-            System.out.println("No image file found for upgraded Freezer");
-            upgradedIcon = null;
-        }
-        setInstanceIcon(upgradedIcon);
+        setInstanceIcon(upgradedClassIcon);
     }
 
     public Projectile attack(){

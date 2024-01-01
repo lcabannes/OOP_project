@@ -116,7 +116,11 @@ public class Game {
     public void spawnAlien() {
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
-        int xSpawnPosition = Board.length - randomInt.nextInt(3);
+        int xSpawnPosition = Board.length;
+        if (board.getBoardType() == 1){
+            xSpawnPosition -= randomInt.nextInt(3);
+        }
+
         Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition, xSpawnPosition);
         gameInterface.addEntity(alien);
     }

@@ -17,6 +17,8 @@ public class Tank extends Human {
 
     private static BufferedImage classIcon;
 
+    private static BufferedImage upgradedClassIcon;
+
     static {
 
         try{
@@ -26,6 +28,16 @@ public class Tank extends Human {
         }
         catch (IOException e) {
             System.out.println("No image file found for Tank");
+        }
+
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/TankUpgraded.png";
+        try{
+            upgradedClassIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded Tank");
+            upgradedClassIcon = null;
         }
 
     }
@@ -39,17 +51,8 @@ public class Tank extends Human {
     @Override
     public void upgrade(){
         super.upgrade();
-        BufferedImage upgradedIcon;
-        String path = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/TankUpgraded.png";
-        try{
-            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
-        }
-        catch (IOException e) {
-            System.out.println("No image file found for upgraded Tank");
-            upgradedIcon = null;
-        }
-        setInstanceIcon(upgradedIcon);
+
+        setInstanceIcon(upgradedClassIcon);
     }
 
     public Projectile attack(){

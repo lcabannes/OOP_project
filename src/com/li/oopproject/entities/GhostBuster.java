@@ -16,6 +16,8 @@ public class GhostBuster extends Human{
 
     private static BufferedImage classIcon;
 
+    private static BufferedImage upgradedClassIcon;
+
     static {
         try{
             GhostBuster.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
@@ -24,6 +26,16 @@ public class GhostBuster extends Human{
         }
         catch (IOException e) {
             System.out.println("No image file found for GhostBuster");
+        }
+
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBusterUpgraded.png";
+        try{
+            upgradedClassIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded GhostBuster");
+            upgradedClassIcon = null;
         }
     }
 
@@ -37,17 +49,7 @@ public class GhostBuster extends Human{
     public void upgrade(){
         super.upgrade();
         setDamage(getDamage() * 3);
-        BufferedImage upgradedIcon;
-        String path = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBusterUpgraded.png";
-        try{
-            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
-        }
-        catch (IOException e) {
-            System.out.println("No image file found for upgraded GhostBuster");
-            upgradedIcon = null;
-        }
-        setInstanceIcon(upgradedIcon);
+        setInstanceIcon(upgradedClassIcon);
     }
 
     public Projectile attack(){
