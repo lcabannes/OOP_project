@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class Upgrade extends Consumable {
 
+    public static final int GOLD_COST = 400;
     private static final int length = 80;
     private static final int height = 80;
     private final static BufferedImage classIcon;
@@ -27,7 +28,6 @@ public class Upgrade extends Consumable {
         }
         classIcon = classIcon1;
     }
-    public static final int GOLD_COST = 200;
     public Upgrade(Board board){
         super(board);
         setInstanceIcon(Upgrade.classIcon);

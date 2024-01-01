@@ -210,7 +210,7 @@ public class Board {
                         removeEntity(projectile);
                     }
                     // if a projectile has crossed a tile boundary, move it to the next tile, eventually,
-                    // all projectiles should maybe be stored as a single list for each row, not each Tile, altough
+                    // all projectiles should maybe be stored as a single list for each row, not each Tile, although
                     // it might be fine as is
                     else if (projectile.getxPos() >= (col + 1) * 100) {
                         tile.projectiles.remove(projectile);

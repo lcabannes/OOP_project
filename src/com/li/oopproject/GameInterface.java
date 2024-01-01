@@ -73,6 +73,7 @@ public class GameInterface extends JFrame{
                                     if (clickedIcon instanceof Upgrade){
                                         if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
                                             human.upgrade();
+                                            goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
                                             System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
                                         } else {
                                             System.out.println("You cannot upgrade this turret");
@@ -126,8 +127,8 @@ public class GameInterface extends JFrame{
                     @Override
                     public void mouseDragged(MouseEvent e) {
                         if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
-                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE)-40);
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE)-40);
                         }
                     }
 
@@ -138,8 +139,8 @@ public class GameInterface extends JFrame{
                     @Override
                     public void mouseMoved(MouseEvent e) {
                         if (clickedIcon != null){
-                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE));
-                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE));
+                            clickedIcon.setyPos(e.getY() + ((finalI-1) * TILESIZE) - 40);
+                            clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE) - 40);
                         }
                     }
 
