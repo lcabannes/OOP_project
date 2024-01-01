@@ -316,6 +316,7 @@ public class GameInterface extends JFrame{
             }
             i++;
         }
+        addCostLabels(); // Display the  cost labels
     }
 
     //stop tracking an entity
@@ -335,7 +336,46 @@ public class GameInterface extends JFrame{
         hpLabel.setText("HP: " + hp);
         goldLabel.setText("Gold: " + gold);
     }
+
+    // Match the cost labels with buttons
+    private void addCostLabels() {
+        // Assuming you have a method getCost() in your Human classes
+        addCostLabelForButton(new Tank(game.getBoard()), 0);
+        addCostLabelForButton(new Gunner(game.getBoard()), 1);
+        addCostLabelForButton(new GhostBuster(game.getBoard()), 2);
+        addCostLabelForButton(new Freezer(game.getBoard()), 3);
+        addCostLabelForButton(new Upgrade(game.getBoard()), 5);
+    }
+
+    // Create cost label for each human or upgrade button
+    private void addCostLabelForButton(Object object, int buttonPosition) {
+        int goldCost;
+
+        // Check the type of the object and cast it to access getGoldCost
+        if (object instanceof Human) {
+            goldCost = ((Human) object).getGoldCost();
+        } else if (object instanceof Upgrade) {
+            goldCost = ((Upgrade) object).getGoldCost();
+        } else {
+            throw new IllegalArgumentException("Unsupported object type");
+        }
+
+        JLabel costLabel = new JLabel("Cost: " + goldCost);
+        costLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        costLabel.setForeground(Color.WHITE); // Set the text color
+
+        int labelWidth = TILESIZE;
+        int labelHeight = 30; // Adjust as needed
+        int labelX = buttonPosition * TILESIZE + 20;
+        int labelY = TILESIZE - labelHeight + 20; // Position under the button
+
+        costLabel.setBounds(labelX, labelY, labelWidth, labelHeight);
+        foreGroundPanel.add(costLabel);
+    }
+
 }
+
+
 
 
 
