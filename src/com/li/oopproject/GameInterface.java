@@ -102,6 +102,10 @@ public class GameInterface extends JFrame{
                                     System.out.println("Selected GhostBuster");
                                     clickedIcon = new GhostBuster(game.getBoard());
                                     break;
+                                case 3: // Freezer
+                                    System.out.println("Selected Freezer");
+                                    clickedIcon = new Freezer(game.getBoard());
+                                    break;
                                 case 5: // upgrade button
                                     clickedIcon = new Upgrade(game.getBoard());
                                 default:
@@ -249,6 +253,11 @@ public class GameInterface extends JFrame{
         ghostBusterButton.setyPos(-TILESIZE);
         ghostBusterButton.setxPos(2 * TILESIZE); // Adjust X position for GhostBuster
         displayedEntities.add(ghostBusterButton);
+
+        Human freezerButton = new Freezer(game.getBoard());
+        freezerButton.setyPos(-TILESIZE);
+        freezerButton.setxPos(3 * TILESIZE); // Adjust X position for GhostBuster
+        displayedEntities.add(freezerButton);
 
         Entity UpgradeButton = new Upgrade(game.getBoard());
         UpgradeButton.setyPos(-TILESIZE);

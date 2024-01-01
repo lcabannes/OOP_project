@@ -39,6 +39,17 @@ public class Tank extends Human {
     @Override
     public void upgrade(){
         super.upgrade();
+        BufferedImage upgradedIcon;
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/TankUpgraded.png";
+        try{
+            upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
+        }
+        catch (IOException e) {
+            System.out.println("No image file found for upgraded Tank");
+            upgradedIcon = null;
+        }
+        setInstanceIcon(upgradedIcon);
     }
 
     public Projectile attack(){
