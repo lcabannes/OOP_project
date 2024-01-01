@@ -8,43 +8,45 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GhostBuster extends Human{
+public class Freezer extends Human{
+
     public static final int GOLD_COST = 50;
     private final static int reloadTime = 2000;  // reload delay in ms
+
     private final static int maxHP = 100;
     private final static int damage = 10;
 
-    private static BufferedImage classIcon;
-
+    private final static BufferedImage classIcon;
     static {
+        BufferedImage classIcon1;
+        String path = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/Freezer.png";
         try{
-            GhostBuster.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().
-                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBuster.png"));
-            GhostBuster.classIcon = GameInterface.resizeImage(GhostBuster.classIcon, getLength(), getHeight());
+            classIcon1 = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
         }
         catch (IOException e) {
-            System.out.println("No image file found for GhostBuster");
+            System.out.println("No image file found for Freezer");
+            classIcon1 = null;
         }
+        classIcon = classIcon1;
     }
 
-    public GhostBuster(Board board){
+    public Freezer(Board board){
         super (maxHP, damage, board, reloadTime);
-        setInstanceIcon(GhostBuster.classIcon);
+        setInstanceIcon(Freezer.classIcon);
         setGoldCost(GOLD_COST);
     }
-
     @Override
     public void upgrade(){
         super.upgrade();
-        setDamage(getDamage() * 3);
         BufferedImage upgradedIcon;
         String path = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/GhostBusterUpgraded.png";
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/Humans/upgradedFreezer.png";
         try{
             upgradedIcon = GameInterface.resizeImage(ImageIO.read(new File(path)), getLength(), getHeight());
         }
         catch (IOException e) {
-            System.out.println("No image file found for upgraded GhostBuster");
+            System.out.println("No image file found for upgraded Freezer");
             upgradedIcon = null;
         }
         setInstanceIcon(upgradedIcon);
@@ -52,12 +54,13 @@ public class GhostBuster extends Human{
 
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-
-        Projectile laser = new Laser(damage, this.getBoard());
-        laser.setxPos(this.getxPos()+getLength());
-        laser.setyPos(this.getyPos());
-        return laser;
+        Projectile iceLaser = new IceLaser(damage, this.getBoard());
+        if (isUpgraded()){
+            setReloadTimeRemaining(1000);
+        }
+        iceLaser.setxPos(this.getxPos()+50);
+        iceLaser.setyPos(this.getyPos());
+        return iceLaser;
     }
 
 }
-
