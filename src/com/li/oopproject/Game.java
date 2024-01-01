@@ -31,7 +31,6 @@ public class Game {
     private int hp = 3;
     private final Timer AlienSpawner;
     private final ArrayList<String> spawnableAliens = new ArrayList<>();
-    private GoldSystem goldSystem;
 
     public Board getBoard() {
         return board;
@@ -183,6 +182,7 @@ public class Game {
             @Override
             public void run() {
                 gameInterface.display();
+                gameInterface.updateGameInfo(currentWave, hp, board.getGoldSystem().getGold());
             }
         });
         // TODO

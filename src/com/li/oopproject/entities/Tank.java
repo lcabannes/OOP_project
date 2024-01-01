@@ -50,6 +50,4 @@ public class Tank extends Human {
         return bomb;
     }
 
-
-
 }
