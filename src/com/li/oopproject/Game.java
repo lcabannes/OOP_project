@@ -180,7 +180,6 @@ public class Game {
 
 
         // here several updates, like position update, etc..., will be done every TICK
-        board.updateEntities(TICKDELAY);
         int hpLost = board.updateEntities(TICKDELAY);
         hp -= hpLost;
 

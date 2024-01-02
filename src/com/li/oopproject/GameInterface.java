@@ -127,7 +127,7 @@ public class GameInterface extends JFrame{
 
         // Initialize labels for wave, HP, and gold
         waveLabel = new JLabel("Wave: 0");
-        hpLabel = new JLabel("HP: 3"); // Assuming starting HP is 100
+        hpLabel = new JLabel("HP: 3");
         goldLabel = new JLabel("Gold: 100");
 
         // Set the font for all labels
