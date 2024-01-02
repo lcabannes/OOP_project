@@ -25,7 +25,6 @@ public class GameInterface extends JFrame{
     private ArrayList<Entity> displayedEntities = new ArrayList<>();
     private Entity clickedIcon = null;
     private GoldSystem goldSystem;
-
     private JLabel waveLabel, hpLabel, goldLabel; // For update game info
 
     public GameInterface(Game game) {
@@ -114,10 +113,10 @@ public class GameInterface extends JFrame{
 
     public JPanel initializeGameInfoPanel(){
         JPanel gameInfoPanel = new JPanel();
-        gameInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        int panelWidth = 180;
+        gameInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        int panelWidth = 200;
         int panelHeight = 30;
-        int rightMargin = 20;
+        int rightMargin = 5;
         int topMargin = 10;
 
         // Set bounds to position it at the top right corner
@@ -310,7 +309,7 @@ public class GameInterface extends JFrame{
                 //   imageLabel.setOpaque(false);
                 foreGroundPanel.add(imageLabel);
                 //place it at its current position + some offset so that it appears in the middle of the tile
-                imageLabel.setBounds(entity.getxPos()+10, entity.getyPos()+TILESIZE+15, entityIcon.getWidth(), entityIcon.getHeight());
+                imageLabel.setBounds((int)(entity.getxPos())+10, entity.getyPos()+TILESIZE+15, entityIcon.getWidth(), entityIcon.getHeight());
             } else {
                 System.out.println("Failed to load the image.");
             }
@@ -340,10 +339,10 @@ public class GameInterface extends JFrame{
     // Match the cost labels with buttons
     private void addCostLabels() {
         // Assuming you have a method getCost() in your Human classes
-        addCostLabelForButton(new Tank(game.getBoard()), 0);
-        addCostLabelForButton(new Gunner(game.getBoard()), 1);
-        addCostLabelForButton(new GhostBuster(game.getBoard()), 2);
-        addCostLabelForButton(new Freezer(game.getBoard()), 3);
+        addCostLabelForButton(new Gunner(game.getBoard()), 0);
+        addCostLabelForButton(new GhostBuster(game.getBoard()), 1);
+        addCostLabelForButton(new Freezer(game.getBoard()), 2);
+        addCostLabelForButton(new Tank(game.getBoard()), 3);
         addCostLabelForButton(new Upgrade(game.getBoard()), 5);
     }
 

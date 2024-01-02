@@ -15,7 +15,7 @@ public abstract class Entity {
     }
     private BufferedImage instanceIcon; // each entity has its own current icon
 
-    public void setxPos(int xPos) {
+    public void setxPos(float xPos) {
         this.xPos = xPos;
     }
 
@@ -27,7 +27,7 @@ public abstract class Entity {
         return yPos;
     }
 
-    private int xPos = 0;
+    private float xPos = 0;
     private int yPos = 0;
 
     public Entity(int hp, int damage, Board board){
@@ -80,7 +80,7 @@ public abstract class Entity {
         return className + " (hp: " + hp + ")";
     }
 
-    public int getxPos(){return this.xPos;}
+    public float getxPos(){return this.xPos;}
     //Action mode
 
     public boolean isAlive(){

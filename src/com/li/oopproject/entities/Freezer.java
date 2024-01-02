@@ -17,8 +17,9 @@ public class Freezer extends Human{
     private final static int damage = 10;
 
     private final static BufferedImage classIcon;
-
     private final static BufferedImage upgradedClassIcon;
+
+
 
     static {
         BufferedImage classIcon1;
@@ -58,15 +59,24 @@ public class Freezer extends Human{
         setInstanceIcon(upgradedClassIcon);
     }
 
+    @Override
     public Projectile attack(){
         this.setReloadTimeRemaining(reloadTime);
-        Projectile iceLaser = new IceLaser(damage, this.getBoard());
+
+        // Determine the slowdown effect based on whether the Freezer is upgraded
+        float slowdownEffect = isUpgraded() ? 100.0F : 0.75F;
+
+        // Create a new IceLaser with the appropriate slowdown effect
+        Projectile iceLaser = new IceLaser(damage, slowdownEffect, 1000, this.getBoard());
+
         if (isUpgraded()){
-            setReloadTimeRemaining(1000);
+            setReloadTimeRemaining(1000); // Optionally adjust the reload time for the upgraded state
         }
-        iceLaser.setxPos(this.getxPos()+50);
+
+        iceLaser.setxPos(this.getxPos() + 50);
         iceLaser.setyPos(this.getyPos());
         return iceLaser;
     }
+
 
 }

@@ -65,13 +65,16 @@ public class Collision {
 
     // Method to determine if a projectile is hitting an alien
     public boolean isProjectileHittingAlien(Projectile projectile, Alien alien) {
-        int distance = alien.getxPos() - projectile.getxPos();
+        float distance = alien.getxPos() - projectile.getxPos();
         return Math.abs(distance) < projectile.getLength();
     }
 
     // Method to handle the impact of a projectile on an alien
     protected void handleProjectileAlienImpact(Projectile projectile, Alien alien) {
         alien.reduceHp(projectile.getDamage());
+        if (projectile instanceof IceLaser iceLaser) {
+            alien.reduceSpeed(iceLaser.getSlowdownEffect(), iceLaser.getSlowdownDuration());
+        }
         if (!alien.isAlive()) {
             board.removeEntity(alien);
             goldSystem.addGold(goldSystem.getGoldForAlienType(alien));
@@ -107,7 +110,6 @@ public class Collision {
             tile.human = null;
         }
     }
-
 
 }
 
