@@ -246,6 +246,20 @@ public class Board {
         }
         return true;
     }
+
+    // Method to get an entity at a given row and column
+    // Use for undeploy button
+    public Entity getEntityAt(int row, int col) {
+        if (row < 0 || row >= height || col < 0 || col >= length) {
+            return null; // Return null if the coordinates are out of bounds
+        }
+
+        Tile tile = tiles[row][col];
+        if (tile.human != null) {
+            return tile.human; // Return the human if present
+        }
+        return null; // Return null if no relevant entity is found
+    }
 }
 
 

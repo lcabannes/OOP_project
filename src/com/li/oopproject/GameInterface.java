@@ -28,6 +28,8 @@ public class GameInterface extends JFrame{
     private JLabel waveLabel, hpLabel, goldLabel; // For update game info
     private BufferedImage winImage;
     private BufferedImage loseImage;
+    private boolean isUndeployMode = false; // For undeploy human
+
 
     public GameInterface(Game game) {
         this.game = game;
@@ -201,6 +203,9 @@ public class GameInterface extends JFrame{
                 case 3:
                     selectionButton = new Tank(game.getBoard());
                     break;
+                case 4:
+                    selectionButton = new Undeploy(game.getBoard());
+                    break;
                 case 5:
                     selectionButton = new Upgrade(game.getBoard());
                     break;
@@ -213,6 +218,7 @@ public class GameInterface extends JFrame{
         }
 
     }
+
     // method to resize an image
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
@@ -239,6 +245,17 @@ public class GameInterface extends JFrame{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (finalI > 0) {
+                            // If in Undeploy mode and a human is clicked, remove it
+                            if (isUndeployMode) {
+                                Human human = game.getBoard().tiles[finalI - 1][finalJ].human;
+                                if (human != null) {
+                                    game.getBoard().removeEntity(human);
+                                    if (Game.VERBOSE) {
+                                        System.out.println("Human removed from: " + (finalI - 1) + " " + finalJ);
+                                    }
+                                    isUndeployMode = false; // Reset the mode
+                                }
+                            }
                             // when clicked try to place a human at this position, message the user about the outcome
                             if (clickedIcon != null) {
                                 if (clickedIcon instanceof Human){
@@ -273,17 +290,21 @@ public class GameInterface extends JFrame{
                             clickedIcon = null;
 
                             switch(finalJ) {
-                                case 0: // DefaultHuman button
+                                case 0: // Gunner button
                                     clickedIcon = new Gunner(game.getBoard());
                                     break;
-                                case 1: // Gunner button
+                                case 1: // GhostBuster button
                                     clickedIcon = new GhostBuster(game.getBoard());
                                     break;
-                                case 2: // GhostBuster button
+                                case 2: // Freezer button
                                     clickedIcon = new Freezer(game.getBoard());
                                     break;
-                                case 3: // Freezer
+                                case 3: // Tank button
                                     clickedIcon = new Tank(game.getBoard());
+                                    break;
+                                case 4: // Undeploy button
+                                    clickedIcon = new Undeploy(game.getBoard());
+                                    isUndeployMode = true;
                                     break;
                                 case 5: // upgrade button
                                     clickedIcon = new Upgrade(game.getBoard());
@@ -395,24 +416,31 @@ public class GameInterface extends JFrame{
         addCostLabelForButton(new GhostBuster(game.getBoard()), 1);
         addCostLabelForButton(new Freezer(game.getBoard()), 2);
         addCostLabelForButton(new Tank(game.getBoard()), 3);
+        addCostLabelForButton(new Undeploy(game.getBoard()), 4);
         addCostLabelForButton(new Upgrade(game.getBoard()), 5);
     }
 
     // Create cost label for each human or upgrade button
     private void addCostLabelForButton(Object object, int buttonPosition) {
         int goldCost;
+        String labelText;
 
         // Check the type of the object and cast it to access getGoldCost
         if (object instanceof Human) {
             goldCost = ((Human) object).getGoldCost();
+            labelText = "Cost: " + goldCost; // Standard cost message
         } else if (object instanceof Upgrade) {
             goldCost = ((Upgrade) object).getGoldCost();
+            labelText = "Cost: " + goldCost; // Standard cost message
+        } else if (object instanceof Undeploy) {
+            goldCost = ((Undeploy) object).getGoldCost();
+            labelText = "Undeploy:\n" + goldCost; // Specific message for undeploy
         } else {
             throw new IllegalArgumentException("Unsupported object type");
         }
 
-        JLabel costLabel = new JLabel("Cost: " + goldCost);
-        costLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        JLabel costLabel = new JLabel(labelText);
+        costLabel.setFont(new Font("Arial", Font.BOLD, 12));
         costLabel.setForeground(Color.WHITE); // Set the text color
 
         int labelWidth = TILESIZE;
@@ -423,7 +451,6 @@ public class GameInterface extends JFrame{
         costLabel.setBounds(labelX, labelY, labelWidth, labelHeight);
         foreGroundPanel.add(costLabel);
     }
-
 }
 
 
