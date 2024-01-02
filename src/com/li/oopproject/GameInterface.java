@@ -26,6 +26,8 @@ public class GameInterface extends JFrame{
     private Entity clickedIcon = null;
     private GoldSystem goldSystem;
     private JLabel waveLabel, hpLabel, goldLabel; // For update game info
+    private BufferedImage winImage;
+    private BufferedImage loseImage;
 
     public GameInterface(Game game) {
         this.game = game;
@@ -89,6 +91,7 @@ public class GameInterface extends JFrame{
         audioManage.loadBGMusic();
 
         setVisible(true);
+
     }
 
     public void loadBackgroundImage(){
@@ -110,6 +113,49 @@ public class GameInterface extends JFrame{
             System.out.println("No background file found");
         }
     }
+
+    private void loadWinImage() {
+        try {
+            String path = GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/GameState/YouWon.png";
+            winImage = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            System.out.println("Error loading win image: " + e.getMessage());
+        }
+    }
+
+    private void loadLoseImage() {
+        try {
+            String path = GameInterface.class.getProtectionDomain().
+                    getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/GameState/YouLost.png";
+            loseImage = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            System.out.println("Error loading lose image: " + e.getMessage());
+        }
+    }
+
+    public void displayEndGameImage(boolean isWin) {
+        loadWinImage();
+        loadLoseImage();
+        BufferedImage image = isWin ? winImage : loseImage;
+        if (image != null) {
+            SwingUtilities.invokeLater(() -> {
+                JLabel imageLabel = new JLabel(new ImageIcon(image));
+                imageLabel.setHorizontalAlignment(JLabel.CENTER);
+                foreGroundPanel.removeAll(); // Clear existing components
+
+                // Set the size and position of the imageLabel to cover the foreGroundPanel
+                imageLabel.setBounds(0, 0, WINDOWLENGTH, WINDOWHEIGHT);
+
+                foreGroundPanel.add(imageLabel);
+                foreGroundPanel.revalidate();
+                foreGroundPanel.repaint();
+            });
+        } else {
+            System.out.println("End game image is null.");
+        }
+    }
+
 
     public JPanel initializeGameInfoPanel(){
         JPanel gameInfoPanel = new JPanel();
@@ -288,6 +334,12 @@ public class GameInterface extends JFrame{
         }
     }
     public void display(){
+        // Check if the game is won or over
+        if (game.isGameWon() || game.isGameOver()) {
+            displayEndGameImage(game.isGameWon());
+            return; // Exit early as we don't need to render other entities
+        }
+
         // remove all Entities (because they have changed position but also appearance (red/attacking/damaged)
         foreGroundPanel.removeAll();
         foreGroundPanel.setDoubleBuffered(true);
