@@ -4,13 +4,17 @@ import com.li.oopproject.Board;
 public abstract class Alien extends Entity implements Mobile, Attacks{
     private int reloadTimeRemaining;
     private int reloadTime;
-    private final int speed; // how much will an alien move left each update
-    public Alien(int hp, int damage, Board board, int speed, int reloadTime){ // aliens all move so they have a speed
+    private float normalSpeed;      // The normal speed of the alien
+    private float currentSpeed;     // The current speed, which may be reduced
+    private long speedReductionEndTime; // Time when speed reduction ends
+
+    public Alien(int hp, int damage, Board board, int normalSpeed, int reloadTime){ // aliens all move so they have a speed
         super(hp, damage, board);
-        this.speed = speed; // since all aliens move they all have a certain speed
         this.reloadTimeRemaining = reloadTime;
         this.reloadTime = reloadTime;
-
+        this.normalSpeed = 1;
+        this.currentSpeed = normalSpeed;
+        this.speedReductionEndTime = 0;
     }
     protected void setReloadTimeRemaining(int reloadTime) {
         reloadTimeRemaining = reloadTime;
@@ -27,10 +31,28 @@ public abstract class Alien extends Entity implements Mobile, Attacks{
         }
     }
     public void move(){
-        this.setxPos(this.getxPos()-speed);
+        this.setxPos(this.getxPos()-this.getCurrentSpeed());
     }
 
-    public int getRewardAmount() {
-        return 50;
+    // Method to apply speed reduction
+    public void reduceSpeed(float reductionAmount, long duration) {
+        if (reductionAmount >= normalSpeed) {
+            this.currentSpeed = 0; // Stop the alien completely
+        } else {
+            this.currentSpeed = normalSpeed - reductionAmount; // Reduce speed
+        }
+        this.speedReductionEndTime = System.currentTimeMillis() + duration;
     }
+
+    // Method to update the speed (to be called periodically)
+    public void updateSpeed() {
+        if (System.currentTimeMillis() > speedReductionEndTime) {
+            this.currentSpeed = normalSpeed;
+        }
+    }
+
+    public float getCurrentSpeed() {
+        return currentSpeed;
+    }
+
 }

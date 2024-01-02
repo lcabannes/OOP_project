@@ -182,12 +182,14 @@ public class Board {
                 int i = 0;
                 while (i < tile.aliens.size()) {
                     Alien alien = tile.aliens.get(i);
+                    alien.updateSpeed(); // Update the Alien's speed (considering IceLaser effect)
+
                     if (tile.human != null && collision.isHumanHittingAlien(tile.human, alien)){
                         alien.reload(elapsedTime);
                         i++;
                         continue;
                     }
-                    alien.move();
+                    alien.move(); // Modify the move method to take speed into account
                     // if an Alien's position is negative it means it breached the Human's defense and
                     // one HP should be deducted from the player's HP
                     if (alien.getxPos() < 0) {

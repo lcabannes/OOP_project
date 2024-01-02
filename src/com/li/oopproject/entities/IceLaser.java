@@ -9,11 +9,16 @@ import java.io.File;
 import java.io.IOException;
 
 public class IceLaser extends Projectile{
+    private float slowdownEffect; // The amount by which the Alien's speed is reduced
+    private long slowdownDuration; // The duration for which the slowdown effect lasts
 
-    public IceLaser(int damage, Board board){
+    public IceLaser(int damage, float slowdownEffect, long slowdownDuration, Board board){
         super(1, damage, 5, board);
+        this.slowdownEffect = slowdownEffect;
+        this.slowdownDuration = slowdownDuration;
         setInstanceIcon(IceLaser.classIcon);
     }
+
     private static final int length = 50;
     private static final int height = 25;
     private final static BufferedImage classIcon;
@@ -33,6 +38,15 @@ public class IceLaser extends Projectile{
     }
     public int getLength(){
         return length;
+    }
+
+    // Getters for the slowdown effect, duration
+    public float getSlowdownEffect() {
+        return slowdownEffect;
+    }
+
+    public long getSlowdownDuration() {
+        return slowdownDuration;
     }
 
 }
