@@ -71,7 +71,7 @@ public class Game {
 
         // define a basic alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
         // and prints the board every time
-        AlienSpawner = new Timer(8000, new ActionListener() {
+        AlienSpawner = new Timer(6000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 spawnAlien(); // Now chooses alien type based on the wave
@@ -176,6 +176,7 @@ public class Game {
                     }
             }
             AlienSpawner.start();
+            AlienSpawner.setInitialDelay(4000);
         }
 
 

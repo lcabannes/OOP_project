@@ -268,7 +268,7 @@ public class GameInterface extends JFrame{
                                 else{
                                     Human human = game.getBoard().tiles[finalI-1][finalJ].human;
                                     if (clickedIcon instanceof Upgrade){
-                                        if (human != null & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
+                                        if (human != null && (!human.isUpgraded()) & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
                                             human.upgrade();
                                             goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
                                             if (Game.VERBOSE){

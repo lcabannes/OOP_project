@@ -25,12 +25,15 @@ public class GoldSystem  {
 
     int getGoldForAlienType(Alien alien) {
         // Example: Different gold amounts for different alien types
+        if (gold > 10000){
+            return 0;
+        }
         if (alien instanceof GhostAlien) {
-            return 70;
+            return 50;
         } else if (alien instanceof OctopusAlien) {
             return 50;
         } else if (alien instanceof AlienShip) {
-            return 100;
+            return 50;
         }
         return 5; // Default amount
     }
