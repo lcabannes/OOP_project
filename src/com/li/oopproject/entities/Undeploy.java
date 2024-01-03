@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Undeploy extends Consumable {
-    public static final int GOLD_COST = 200;
+    public static final int GOLD_COST = 0;
     private static final int length = 80;
     private static final int height = 80;
     private final static BufferedImage classIcon;
