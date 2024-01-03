@@ -434,7 +434,7 @@ public class GameInterface extends JFrame{
             labelText = "Cost: " + goldCost; // Standard cost message
         } else if (object instanceof Undeploy) {
             goldCost = ((Undeploy) object).getGoldCost();
-            labelText = "Undeploy:\n" + goldCost; // Specific message for undeploy
+            labelText = "Undeploy: " + goldCost; // Specific message for undeploy
         } else {
             throw new IllegalArgumentException("Unsupported object type");
         }
