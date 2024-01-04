@@ -232,7 +232,6 @@ public class Game {
                 gameInterface.updateGameInfo(currentWave, hp, board.getGoldSystem().getGold());
             }
         });
-        // TODO
 
         timeSinceWaveStart += TICKDELAY;
         int curWaveDuration = (currentWave <= 7) ? waveDuration[currentWave - 1] : 30000; // Marathon mode logic
@@ -251,6 +250,8 @@ public class Game {
             }
         }
     }
+
+
     // Getter for bossHP
     public int getBossHP() {
         return bossHP;

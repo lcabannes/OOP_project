@@ -18,22 +18,7 @@ public class Menu extends JFrame {
     public final int UNLOCK_BOARD_LEVEL = 5;
 
     public Menu() {
-
-        String filePath = GameInterface.class.getProtectionDomain().
-                getCodeSource().getLocation().getPath() + "com/li/oopproject/bestScores.ser";
-
-
-        if (fileExists(filePath)) {
-            Scores savedScores = deserializeObject(filePath);
-            if (savedScores != null) {
-                // Use the deserialized object as needed
-                this.bestScores = savedScores;
-            } else {
-                System.out.println("Failed to deserialize the scores.");
-            }
-        } else {
-            this.bestScores = new Scores();
-        }
+        loadScores();
 
         // Create a main panel
         JPanel mainPanel = new JPanel();
@@ -41,28 +26,7 @@ public class Menu extends JFrame {
 
         // Create a dropdown for game modes
         String[] gameModes = {"Easy", "Normal", "Hard", "Marathon"};
-        JComboBox<String> modeDropdown = new JComboBox<>(gameModes);
-        modeDropdown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String selected = (String)cb.getSelectedItem();
-                switch (selected) {
-                    case "Easy":
-                        selectedMode = Game.EASY_MODE;
-                        break;
-                    case "Normal":
-                        selectedMode = Game.NORMAL_MODE;
-                        break;
-                    case "Hard":
-                        selectedMode = Game.HARD_MODE;
-                        break;
-                    case "Marathon":
-                        selectedMode = Game.MARATHON_MODE;
-                        break;
-                }
-            }
-        });
+        JComboBox<String> modeDropdown = initModeDropDown(gameModes);
 
         // Create a button for starting a new game
         JButton newGameButton = new JButton("New Game");
@@ -74,29 +38,7 @@ public class Menu extends JFrame {
             }
         });
 
-
-
-        String[] boards = {"Default board", "portal board"};
-
-        if (bestScores.getBest() <= UNLOCK_BOARD_LEVEL){
-            boards[1] = "FINISH WAVE " + UNLOCK_BOARD_LEVEL + " TO UNLOCK NEW BOARD";
-        }
-
-        JComboBox<String> boardDropdown = new JComboBox<>(boards);
-        boardDropdown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                String selected = (String)cb.getSelectedItem();
-                switch (selected) {
-                    case "default board":
-                        selectedBoard = 0;
-                        break;
-                    case "portal board":
-                        selectedBoard = 1;
-                }
-            }
-        });
+        JComboBox<String> boardDropdown = initBoardDropdown();
 
         JButton bestScoresButton = new JButton("Best Scores");
         bestScoresButton.addActionListener(new ActionListener() {
@@ -122,6 +64,74 @@ public class Menu extends JFrame {
         setVisible(true);
     }
 
+    public JComboBox<String> initBoardDropdown(){
+        String[] boards = {"default board", "portal board"};
+        if (bestScores.getBest() <= UNLOCK_BOARD_LEVEL){
+            boards[1] = "FINISH WAVE " + UNLOCK_BOARD_LEVEL + " TO UNLOCK NEW BOARD";
+        }
+        JComboBox<String> boardDropdown = new JComboBox<>(boards);
+        boardDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String selected = (String)cb.getSelectedItem();
+                switch (selected) {
+                    case "default board":
+                        selectedBoard = 0;
+                        break;
+                    case "portal board":
+                        selectedBoard = 1;
+                        break;
+                    default:
+                        selectedBoard = 0;
+                }
+            }
+        });
+        return boardDropdown;
+    }
+
+    public JComboBox<String> initModeDropDown(String[] gameModes){
+        // Create a dropdown for game modes
+        JComboBox<String> modeDropdown = new JComboBox<>(gameModes);
+        modeDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String selected = (String)cb.getSelectedItem();
+                switch (selected) {
+                    case "Easy":
+                        selectedMode = Game.EASY_MODE;
+                        break;
+                    case "Normal":
+                        selectedMode = Game.NORMAL_MODE;
+                        break;
+                    case "Hard":
+                        selectedMode = Game.HARD_MODE;
+                        break;
+                    case "Marathon":
+                        selectedMode = Game.MARATHON_MODE;
+                        break;
+                }
+            }
+        });
+        return modeDropdown;
+    }
+    public void loadScores(){
+        String filePath = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/bestScores.ser";
+        if (fileExists(filePath)) {
+            Scores savedScores = deserializeObject(filePath);
+            if (savedScores != null) {
+                // Use the deserialized object as needed
+                this.bestScores = savedScores;
+            } else {
+                System.out.println("Failed to deserialize the scores.");
+            }
+        } else {
+            this.bestScores = new Scores();
+        }
+
+    }
     private void startGame() {
         System.out.println("Game is starting in mode: " + selectedMode);
         Main.startGame(selectedMode, selectedBoard, bestScores); // Pass the selected mode to the game
