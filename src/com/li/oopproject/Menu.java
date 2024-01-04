@@ -76,7 +76,7 @@ public class Menu extends JFrame {
 
 
 
-        String[] boards = {"default board", "portal board"};
+        String[] boards = {"Default board", "portal board"};
 
         if (bestScores.getBest() <= UNLOCK_BOARD_LEVEL){
             boards[1] = "FINISH WAVE " + UNLOCK_BOARD_LEVEL + " TO UNLOCK NEW BOARD";

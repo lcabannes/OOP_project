@@ -41,11 +41,6 @@ public abstract class Entity {
         return damage;
     }
 
-    // Getter for hp
-    public int getHp() {
-        return hp;
-    }
-
     // Getter for board
     public Board getBoard() {
         return this.board;
