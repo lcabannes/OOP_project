@@ -231,20 +231,6 @@ public class Board {
         return hpLost;
     }
 
-    // Check if boss alien is alive, if not, game won
-    public boolean isBossAlienAlive() {
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < length; col++) {
-                Tile tile = tiles[row][col];
-                for (Alien alien : tile.aliens) {
-                    if (alien instanceof BossAlien) {
-                        return true; // Boss alien is found and assumed to be alive
-                    }
-                }
-            }
-        }
-        return false; // Boss alien not found
-    }
 
     public boolean noAlien(){
         for (int row = 0; row < height; row++){

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 public class Menu extends JFrame {
-    private int selectedMode;
+    private int selectedMode = Game.EASY_MODE;
     private int selectedBoard;
 
     private Scores bestScores;

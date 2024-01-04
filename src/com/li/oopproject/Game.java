@@ -35,7 +35,7 @@ public class Game {
     private final Timer AlienSpawner;
     private final ArrayList<String> spawnableAliens = new ArrayList<>();
     private final Scores bestScores;
-    private boolean bossSpawned = false;
+    private Alien boss = null;
     private int bossHP;
 
 
@@ -55,19 +55,19 @@ public class Game {
         switch(this.mode) {
             case EASY_MODE:
                 this.waveNum = 3;
-                bossHP = 100; // Set lower HP for easy mode
+                bossHP = 500; // Set lower HP for easy mode
                 break;
             case NORMAL_MODE:
                 this.waveNum = 5;
-                bossHP = 150;
+                bossHP = 1500;
                 break;
             case HARD_MODE:
                 this.waveNum = 7;
-                bossHP = 200;
+                bossHP = 3000;
                 break;
             case MARATHON_MODE:
                 this.waveNum = 100;
-                bossHP = 250;
+                bossHP = 3000;
                 break;
             default:
                 // Default to easy mode if an invalid mode is provided
@@ -77,7 +77,6 @@ public class Game {
         }
 
         // use the eventQueue invoke later to execute the Graphical interface update in the EDT
-
         gameInterface = new GameInterface(Game.this);
 
         // define a basic alien Spawner that randomly spawns an alien every 8 seconds (8000ms)
@@ -92,15 +91,17 @@ public class Game {
                 }
             }
         });
-
     }
 
     public boolean isGameOver(){
+        if (boss!= null && boss.getxPos() <= 0){
+            return true;
+        }
         return this.hp <= 0;
     }
     public boolean isGameWon(){
         // The game is won if it's the final wave, the boss has spawned, and the boss alien is not alive
-        return currentWave == waveNum && bossSpawned && !board.isBossAlienAlive();
+        return currentWave == waveNum +1;
     }
     public void startGame(){
         System.out.println("Game Starting");
@@ -108,7 +109,6 @@ public class Game {
         Timer baseTimer = new Timer(TICKDELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 updateGame();
                 if (isGameOver() || isGameWon()) {
                     ((Timer) e.getSource()).stop();  // Stop the timer when the game is finished
@@ -126,26 +126,24 @@ public class Game {
         baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
     }
 
+    public void spawnBoss(){
+        int middleX = Board.length; // Assuming Board.length is the width of the board
+        int middleY = Board.height / 2 - 1; // Assuming Board.height is the height of the board
+        Alien bossAlien = board.spawnAlien("BossAlien", middleY, middleX); // Set the position of the boss alien
+        gameInterface.addEntity(bossAlien);
+        this.boss = bossAlien;
+    }
     public void spawnAlien() {
         // Only spawn the boss in the final wave
-        if (currentWave == waveNum) {
-            if (!bossSpawned) {
-                int middleX = Board.length; // Assuming Board.length is the width of the board
-                int middleY = Board.height / 2 - 1; // Assuming Board.height is the height of the board
-                Alien bossAlien = board.spawnAlien("BossAlien", middleY, middleX); // Set the position of the boss alien
-                gameInterface.addEntity(bossAlien);
-                bossSpawned = true;
-            }
-        } else {
-            Random randomInt = new Random();
-            int ySpawnPosition = randomInt.nextInt(Board.height);
-            int xSpawnPosition = Board.length;
-            if (board.getBoardType() == 1) {
-                xSpawnPosition -= randomInt.nextInt(3);
-            }
-            Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition, xSpawnPosition);
-            gameInterface.addEntity(alien);
+        Random randomInt = new Random();
+        int ySpawnPosition = randomInt.nextInt(Board.height);
+        int xSpawnPosition = Board.length;
+        if (board.getBoardType() == 1) {
+            xSpawnPosition -= randomInt.nextInt(3);
         }
+        Alien alien = board.spawnAlien(spawnableAliens.get(randomInt.nextInt(spawnableAliens.size())), ySpawnPosition, xSpawnPosition);
+        gameInterface.addEntity(alien);
+
     }
 
     public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem){
@@ -180,50 +178,47 @@ public class Game {
         if (timeSinceWaveStart == 0) {
             if (currentWave == waveNum) {
                 // Logic for the final wave
-                AlienSpawner.stop();
-                spawnAlien(); // Spawn the boss alien
-            } else {
-                switch (currentWave) {
-                    case 0: // wave 0 : for a fun easter egg
-                        spawnableAliens.add("DefaultAlien");
-                        AlienSpawner.setDelay(100);
-                    case 1: // Wave 1
-                        //spawn OctopusAlien in wave 1
-                        spawnableAliens.add("OctopusAlien");
-                        AlienSpawner.setDelay(4000);
-                        break;
-                    case 2: // Wave 2
-                        //spawn OctopusAlien, GhostAlien since wave 2
-                        spawnableAliens.add("GhostAlien");
-                        AlienSpawner.setDelay(3500);
-                        break;
-                    case 3: // Wave 3
-                        //spawn OctopusAlien, GhostAlien, AlienShip since wave 3
-                        spawnableAliens.add("AlienShip");
-                        AlienSpawner.setDelay(3000);
-                        break;
-                    case 4: // Wave 4
-                        AlienSpawner.setDelay(2500);
-                        break;
-                    case 5: // Wave 5
-                        AlienSpawner.setDelay(2000);
-                        break;
-                    case 6: // Wave 6
-                        AlienSpawner.setDelay(1500);
-                        break;
-                    case 7: // Wave 7
-                        AlienSpawner.setDelay(1000);
-                        break;
-                    default:
-                        if (AlienSpawner.getDelay() > 100) {
-                            AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
-                        }
-                }
+                spawnBoss(); // Spawn the boss alien
+            }
+            switch (currentWave) {
+                case 0: // wave 0 : for a fun easter egg
+                    spawnableAliens.add("DefaultAlien");
+                    AlienSpawner.setDelay(100);
+                case 1: // Wave 1
+                    //spawn OctopusAlien in wave 1
+                    spawnableAliens.add("OctopusAlien");
+                    AlienSpawner.setDelay(4000);
+                    break;
+                case 2: // Wave 2
+                    //spawn OctopusAlien, GhostAlien since wave 2
+                    spawnableAliens.add("GhostAlien");
+                    AlienSpawner.setDelay(3500);
+                    break;
+                case 3: // Wave 3
+                    //spawn OctopusAlien, GhostAlien, AlienShip since wave 3
+                    spawnableAliens.add("AlienShip");
+                    AlienSpawner.setDelay(3000);
+                    break;
+                case 4: // Wave 4
+                    AlienSpawner.setDelay(2500);
+                    break;
+                case 5: // Wave 5
+                    AlienSpawner.setDelay(2000);
+                    break;
+                case 6: // Wave 6
+                    AlienSpawner.setDelay(1500);
+                    break;
+                case 7: // Wave 7
+                    AlienSpawner.setDelay(1000);
+                    break;
+                default:
+                    if (AlienSpawner.getDelay() > 100) {
+                        AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
+                    }
+            }
             AlienSpawner.start();
             AlienSpawner.setInitialDelay(4000);
-            }
         }
-
 
         // here several updates, like position update, etc..., will be done every TICK
         int hpLost = board.updateEntities(TICKDELAY);
@@ -244,7 +239,7 @@ public class Game {
 
         if (timeSinceWaveStart >= curWaveDuration) {
             AlienSpawner.stop();
-            if (currentWave < waveNum || board.noAlien()) {
+            if (board.noAlien()) {
                 System.out.println("Good job, you finished Wave " + currentWave);
                 timeSinceWaveStart = 0;
                 currentWave += 1;
