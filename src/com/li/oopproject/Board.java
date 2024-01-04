@@ -38,11 +38,9 @@ public class Board {
         return this.tiles;
     }
 
-
     public class Tile { // Tile local class is aggregated by a Board, a tile contains at most 1 human and possibly many Aliens
         ArrayList<Alien> aliens;
         Human human;
-
         ArrayList<Projectile> projectiles;
 
         public Tile() { // Aliens are stored in each tile
@@ -130,6 +128,9 @@ public class Board {
                 break;
             case "AlienShip":
                 newAlien = new AlienShip(this);
+                break;
+            case "BossAlien":
+                newAlien = new BossAlien(this, game.getBossHP());
                 break;
             default:
                 System.out.println("Tried to spawn unknown alien name");
@@ -230,6 +231,21 @@ public class Board {
         return hpLost;
     }
 
+    // Check if boss alien is alive, if not, game won
+    public boolean isBossAlienAlive() {
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < length; col++) {
+                Tile tile = tiles[row][col];
+                for (Alien alien : tile.aliens) {
+                    if (alien instanceof BossAlien) {
+                        return true; // Boss alien is found and assumed to be alive
+                    }
+                }
+            }
+        }
+        return false; // Boss alien not found
+    }
+
     public boolean noAlien(){
         for (int row = 0; row < height; row++){
             if (!noAlien(row)){
@@ -241,24 +257,10 @@ public class Board {
     public boolean noAlien(int row){
         for (Tile tile:tiles[row]){
             if (!tile.aliens.isEmpty()){
-                    return false;
+                return false;
             }
         }
         return true;
-    }
-
-    // Method to get an entity at a given row and column
-    // Use for undeploy button
-    public Entity getEntityAt(int row, int col) {
-        if (row < 0 || row >= height || col < 0 || col >= length) {
-            return null; // Return null if the coordinates are out of bounds
-        }
-
-        Tile tile = tiles[row][col];
-        if (tile.human != null) {
-            return tile.human; // Return the human if present
-        }
-        return null; // Return null if no relevant entity is found
     }
 }
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Tank extends Human {
 
-    public static final int GOLD_COST = 200;
+    public static final int GOLD_COST = 100;
     private final static int reloadTime = 4000;  // reload delay in ms
     private final static int maxHP = 300;
     private final static int damage = 100;

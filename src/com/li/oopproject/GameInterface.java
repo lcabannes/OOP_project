@@ -120,11 +120,25 @@ public class GameInterface extends JFrame{
         try {
             String path = GameInterface.class.getProtectionDomain().
                     getCodeSource().getLocation().getPath() + "com/li/oopproject/assets/GameState/YouWon.png";
-            winImage = ImageIO.read(new File(path));
+            BufferedImage originalImage = ImageIO.read(new File(path));
+
+            // Desired dimensions
+            int desiredWidth = 800; // Change this to your desired width
+            int desiredHeight = 600; // Change this to your desired height
+
+            // Resize the image while maintaining aspect ratio
+            Image resizedImage = originalImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
+            BufferedImage bufferedResizedImage = new BufferedImage(desiredWidth, desiredHeight, BufferedImage.TYPE_INT_ARGB);
+
+            bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+
+            // Assign the resized image to winImage
+            winImage = bufferedResizedImage;
         } catch (IOException e) {
             System.out.println("Error loading win image: " + e.getMessage());
         }
     }
+
 
     private void loadLoseImage() {
         try {

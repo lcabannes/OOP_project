@@ -29,11 +29,11 @@ public class GoldSystem  {
             return 0;
         }
         if (alien instanceof GhostAlien) {
-            return 50;
+            return 70;
         } else if (alien instanceof OctopusAlien) {
             return 50;
         } else if (alien instanceof AlienShip) {
-            return 50;
+            return 100;
         }
         return 5; // Default amount
     }
