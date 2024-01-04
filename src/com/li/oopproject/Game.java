@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.*;
 
 public class Game {
     private final static int TICKDELAY = 20; // delay between each game-state update in the game
@@ -17,6 +18,7 @@ public class Game {
     private int timeSinceWaveStart = 0;
     private GameInterface gameInterface;
     public static final boolean VERBOSE = false;
+
     private int level;
 
     private int mode;
@@ -31,13 +33,15 @@ public class Game {
     private int hp = 3;
     private final Timer AlienSpawner;
     private final ArrayList<String> spawnableAliens = new ArrayList<>();
+    private final Scores bestScores;
 
 
     public Board getBoard() {
         return board;
     }
 
-    public Game(int level, int mode, int boardType){
+    public Game(int level, int mode, int boardType, Scores bestScores){
+        this.bestScores = bestScores;
         this.level = level;
         this.currentWave = 1;
         this.board = new Board(this, boardType);
@@ -106,7 +110,8 @@ public class Game {
                     if (isGameWon()){
                         System.out.println("you won!!!");
                     }
-
+                    bestScores.insertScore(currentWave-1, board.getBoardType());
+                    saveScores();
                 }
             }
         });
@@ -134,6 +139,22 @@ public class Game {
         return false;
     }
 
+    public void saveScores(){
+        String filePath = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/bestScores.ser";
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+
+            // Serialize and write the object to the file
+            objectOutputStream.writeObject(bestScores);
+            System.out.println(bestScores.getBest());
+
+            System.out.println("Scores saved to " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void updateGame(){
         // Game logic

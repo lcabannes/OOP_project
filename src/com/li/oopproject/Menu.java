@@ -4,12 +4,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class Menu extends JFrame {
     private int selectedMode;
     private int selectedBoard;
 
+    private Scores bestScores;
+
+    public final int UNLOCK_BOARD_LEVEL = 5;
+
     public Menu() {
+
+        String filePath = GameInterface.class.getProtectionDomain().
+                getCodeSource().getLocation().getPath() + "com/li/oopproject/bestScores.ser";
+
+
+        if (fileExists(filePath)) {
+            Scores savedScores = deserializeObject(filePath);
+            if (savedScores != null) {
+                // Use the deserialized object as needed
+                this.bestScores = savedScores;
+            } else {
+                System.out.println("Failed to deserialize the scores.");
+            }
+        } else {
+            this.bestScores = new Scores();
+        }
 
         // Create a main panel
         JPanel mainPanel = new JPanel();
@@ -50,7 +74,13 @@ public class Menu extends JFrame {
             }
         });
 
+
+
         String[] boards = {"default board", "portal board"};
+
+        if (bestScores.getBest() <= UNLOCK_BOARD_LEVEL){
+            boards[1] = "FINISH WAVE " + UNLOCK_BOARD_LEVEL + " TO UNLOCK NEW BOARD";
+        }
 
         JComboBox<String> boardDropdown = new JComboBox<>(boards);
         boardDropdown.addActionListener(new ActionListener() {
@@ -68,10 +98,19 @@ public class Menu extends JFrame {
             }
         });
 
+        JButton bestScoresButton = new JButton("Best Scores");
+        bestScoresButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayScores();
+            }
+        });
+
         // Add components to the main panel
         mainPanel.add(modeDropdown, BorderLayout.NORTH);
         mainPanel.add(newGameButton, BorderLayout.CENTER);
         mainPanel.add(boardDropdown, BorderLayout.SOUTH);
+        mainPanel.add(bestScoresButton, BorderLayout.BEFORE_LINE_BEGINS);
 
 
         // Frame properties
@@ -85,6 +124,38 @@ public class Menu extends JFrame {
 
     private void startGame() {
         System.out.println("Game is starting in mode: " + selectedMode);
-        Main.startGame(selectedMode, selectedBoard); // Pass the selected mode to the game
+        Main.startGame(selectedMode, selectedBoard, bestScores); // Pass the selected mode to the game
+    }
+
+    // Deserialize an object from a file
+    private static <T> T deserializeObject(String filePath) {
+        try (FileInputStream fileIn = new FileInputStream(filePath);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+            return (T) objectIn.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static boolean fileExists(String filePath) {
+        File file = new File(filePath);
+        return file.exists() && !file.isDirectory();
+    }
+
+    public void displayScores() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Default Board 10 best scores:\n");
+        for (Integer score : bestScores.getDefault_board_scores()) {
+            sb.append(score).append("\n");
+        }
+
+        sb.append("\nPortal Board 10 best scores:\n");
+        for (Integer score : bestScores.getPortal_board_scores()) {
+            sb.append(score).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(null, sb.toString(), "Best Scores", JOptionPane.INFORMATION_MESSAGE);
     }
 }
