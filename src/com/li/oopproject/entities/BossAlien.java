@@ -14,9 +14,8 @@ public class BossAlien extends Alien {
     private final static int speed = 1;
     private final static int damage = 100;
     private final static int reloadTime = 2500;
-
-    private static final int length = 250;
-    private static final int height = 250;
+    private static final int length = 150;
+    private static final int height = 150;
     private final static BufferedImage classIcon;
     static {
         BufferedImage classIcon1;
