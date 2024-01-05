@@ -28,8 +28,6 @@ public class GameInterface extends JFrame{
     private JLabel waveLabel, hpLabel, goldLabel; // For update game info
     private BufferedImage winImage;
     private BufferedImage loseImage;
-    private boolean isUndeployMode = false; // For undeploy human
-
 
     public GameInterface(Game game) {
         this.game = game;
@@ -258,84 +256,16 @@ public class GameInterface extends JFrame{
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (finalI > 0) {
-                            // If in Undeploy mode and a human is clicked, remove it
-                            if (isUndeployMode) {
-                                Human human = game.getBoard().tiles[finalI - 1][finalJ].human;
-                                if (human != null) {
-                                    game.getBoard().removeEntity(human);
-                                    if (Game.VERBOSE) {
-                                        System.out.println("Human removed from: " + (finalI - 1) + " " + finalJ);
-                                    }
-                                    isUndeployMode = false; // Reset the mode
-                                }
-                            }
-                            // when clicked try to place a human at this position, message the user about the outcome
-                            if (clickedIcon != null) {
-                                if (clickedIcon instanceof Human){
-                                    if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem) & Game.VERBOSE) {
-                                        System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
-                                    } else if (Game.VERBOSE){
-                                        System.out.println("You cannot place this turret here");
-                                    }
-                                }
-                                else{
-                                    Human human = game.getBoard().tiles[finalI-1][finalJ].human;
-                                    if (clickedIcon instanceof Upgrade){
-                                        if (human != null && (!human.isUpgraded()) & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
-                                            human.upgrade();
-                                            goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
-                                            if (Game.VERBOSE){
-                                                System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
-                                            }
-                                        } else if (Game.VERBOSE){
-                                            System.out.println("You cannot upgrade this turret");
-                                        }
-                                    }
-                                }
-                            }
-                            displayedEntities.remove(clickedIcon);
-                            clickedIcon = null;
-
+                        if (finalI == 0) {
+                            topRowButtonLogic(finalI, finalJ);
                         }
                         else {
-                            // Top row button logic for selecting an entity
-                            displayedEntities.remove(clickedIcon);
-                            clickedIcon = null;
-
-                            switch(finalJ) {
-                                case 0: // Gunner button
-                                    clickedIcon = new Gunner(game.getBoard());
-                                    break;
-                                case 1: // GhostBuster button
-                                    clickedIcon = new GhostBuster(game.getBoard());
-                                    break;
-                                case 2: // Freezer button
-                                    clickedIcon = new Freezer(game.getBoard());
-                                    break;
-                                case 3: // Tank button
-                                    clickedIcon = new Tank(game.getBoard());
-                                    break;
-                                case 4: // Undeploy button
-                                    clickedIcon = new Undeploy(game.getBoard());
-                                    isUndeployMode = true;
-                                    break;
-                                case 5: // upgrade button
-                                    clickedIcon = new Upgrade(game.getBoard());
-                                default:
-                                    // Handle other cases or do nothing
-                                    break;
-                            }
-
-                            if (clickedIcon != null) {
-                                clickedIcon.setxPos(0);
-                                clickedIcon.setyPos(-TILESIZE);
-                                displayedEntities.add(clickedIcon);
-                            }
+                            boardButtonLogic(finalI, finalJ);
                         }
                     }
                 });
 
+                // button tracking logic
                 button.addMouseMotionListener(new MouseMotionListener() {
                     @Override
                     public void mouseDragged(MouseEvent e) {
@@ -345,11 +275,9 @@ public class GameInterface extends JFrame{
                             clickedIcon.setxPos(e.getX() + (finalJ * TILESIZE)-40);
                         }
                     }
-
                     // the finalI-1 comes from the fact that we are giving position to entities based on the
-                    // the board but there is an aditional row of buttons in the graphical interface
-                    // so the indexation is different, the positions also, we might want to armonize
-                    // the position later
+                    // board but there is an additional row of buttons in the graphical interface
+                    // so the indexation is different
                     @Override
                     public void mouseMoved(MouseEvent e) {
                         if (clickedIcon != null){
@@ -367,6 +295,79 @@ public class GameInterface extends JFrame{
                 buttonPanel.add(button);
             }
         }
+    }
+
+    public void topRowButtonLogic(int finalI, int finalJ){
+        // Top row button logic for selecting an entity
+        displayedEntities.remove(clickedIcon);
+        clickedIcon = null;
+
+        switch(finalJ) {
+            case 0: // Gunner button
+                clickedIcon = new Gunner(game.getBoard());
+                break;
+            case 1: // GhostBuster button
+                clickedIcon = new GhostBuster(game.getBoard());
+                break;
+            case 2: // Freezer button
+                clickedIcon = new Freezer(game.getBoard());
+                break;
+            case 3: // Tank button
+                clickedIcon = new Tank(game.getBoard());
+                break;
+            case 4: // Undeploy button
+                clickedIcon = new Undeploy(game.getBoard());
+                break;
+            case 5: // upgrade button
+                clickedIcon = new Upgrade(game.getBoard());
+            default:
+                // Handle other cases or do nothing
+                break;
+        }
+
+        if (clickedIcon != null) {
+            clickedIcon.setxPos(0);
+            clickedIcon.setyPos(-TILESIZE);
+            displayedEntities.add(clickedIcon);
+        }
+    }
+
+    public void  boardButtonLogic(int finalI, int finalJ){
+        // If in Undeploy mode and a human is clicked, remove it
+        // when clicked try to place a human at this position, message the user about the outcome
+        if (clickedIcon == null){
+            return;
+        }
+        if (clickedIcon instanceof Human){
+            if (game.placeHuman((Human) clickedIcon, (finalI - 1), finalJ, goldSystem) & Game.VERBOSE) {
+                System.out.println("Successfully place a turret at: " + (finalI - 1) + " " + finalJ);
+            } else if (Game.VERBOSE){
+                System.out.println("You cannot place this turret here");
+            }
+        }
+        else if (clickedIcon instanceof Undeploy){
+            Human human = game.getBoard().tiles[finalI - 1][finalJ].human;
+            if (human != null) {
+                game.getBoard().removeEntity(human);
+                if (Game.VERBOSE) {
+                    System.out.println("Human removed from: " + (finalI - 1) + " " + finalJ);
+                }
+            }
+        }
+        else if (clickedIcon instanceof Upgrade){
+            Human human = game.getBoard().tiles[finalI-1][finalJ].human;
+            if (human != null && (!human.isUpgraded()) & ((Upgrade) clickedIcon).getGoldCost() <= goldSystem.getGold()) {
+                human.upgrade();
+                goldSystem.addGold(-((Upgrade) clickedIcon).getGoldCost());
+                if (Game.VERBOSE){
+                    System.out.println("Successfully upgraded a turret at: " + (finalI - 1) + " " + finalJ);
+                }
+            } else if (Game.VERBOSE){
+                System.out.println("You cannot upgrade this turret");
+            }
+        }
+        displayedEntities.remove(clickedIcon);
+        clickedIcon = null;
     }
     public void display(){
         // Check if the game is won or over

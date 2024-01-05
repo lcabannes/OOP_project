@@ -175,49 +175,8 @@ public class Game {
     public void updateGame() {
         // Game logic
         // keep track of time elapsed to know when to end a wave
-        if (timeSinceWaveStart == 0) {
-            if (currentWave == waveNum) {
-                // Logic for the final wave
-                spawnBoss(); // Spawn the boss alien
-            }
-            switch (currentWave) {
-                case 0: // wave 0 : for a fun easter egg
-                    spawnableAliens.add("DefaultAlien");
-                    AlienSpawner.setDelay(100);
-                case 1: // Wave 1
-                    //spawn OctopusAlien in wave 1
-                    spawnableAliens.add("OctopusAlien");
-                    AlienSpawner.setDelay(4000);
-                    break;
-                case 2: // Wave 2
-                    //spawn OctopusAlien, GhostAlien since wave 2
-                    spawnableAliens.add("GhostAlien");
-                    AlienSpawner.setDelay(3500);
-                    break;
-                case 3: // Wave 3
-                    //spawn OctopusAlien, GhostAlien, AlienShip since wave 3
-                    spawnableAliens.add("AlienShip");
-                    AlienSpawner.setDelay(3000);
-                    break;
-                case 4: // Wave 4
-                    AlienSpawner.setDelay(2500);
-                    break;
-                case 5: // Wave 5
-                    AlienSpawner.setDelay(2000);
-                    break;
-                case 6: // Wave 6
-                    AlienSpawner.setDelay(1500);
-                    break;
-                case 7: // Wave 7
-                    AlienSpawner.setDelay(1000);
-                    break;
-                default:
-                    if (AlienSpawner.getDelay() > 100) {
-                        AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
-                    }
-            }
-            AlienSpawner.start();
-            AlienSpawner.setInitialDelay(4000);
+        if (timeSinceWaveStart == 0){
+            launchNewWave();
         }
 
         // here several updates, like position update, etc..., will be done every TICK
@@ -249,6 +208,53 @@ public class Game {
                 }
             }
         }
+    }
+
+    public void launchNewWave(){
+
+        if (currentWave == waveNum) {
+            // Logic for the final wave
+            spawnBoss(); // Spawn the boss alien
+        }
+        switch (currentWave) {
+            case 0: // wave 0 : for a fun easter egg
+                spawnableAliens.add("DefaultAlien");
+                AlienSpawner.setDelay(100);
+            case 1: // Wave 1
+                //spawn OctopusAlien in wave 1
+                spawnableAliens.add("OctopusAlien");
+                AlienSpawner.setDelay(4000);
+                break;
+            case 2: // Wave 2
+                //spawn OctopusAlien, GhostAlien since wave 2
+                spawnableAliens.add("GhostAlien");
+                AlienSpawner.setDelay(3500);
+                break;
+            case 3: // Wave 3
+                //spawn OctopusAlien, GhostAlien, AlienShip since wave 3
+                spawnableAliens.add("AlienShip");
+                AlienSpawner.setDelay(3000);
+                break;
+            case 4: // Wave 4
+                AlienSpawner.setDelay(2500);
+                break;
+            case 5: // Wave 5
+                AlienSpawner.setDelay(2000);
+                break;
+            case 6: // Wave 6
+                AlienSpawner.setDelay(1500);
+                break;
+            case 7: // Wave 7
+                AlienSpawner.setDelay(1000);
+                break;
+            default:
+                if (AlienSpawner.getDelay() > 100) {
+                    AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
+                }
+        }
+        AlienSpawner.start();
+        AlienSpawner.setInitialDelay(4000);
+
     }
 
 

@@ -169,68 +169,84 @@ public class Board {
 
         for (int row = 0; row < Board.height; row++) {
             for (int col = 0; col < Board.length; col++) {
+
                 Tile tile = tiles[row][col];
+
                 // if there is a human in this tile, reload the human
-                if (tile.human != null) {
-                    tile.human.reload(elapsedTime);
-                    if (tile.human.getReloadTimeRemaining() <= 0 & (!noAlien(row))) {
-                        Projectile projectile = tile.human.attack();
-                        tile.projectiles.add(projectile);
-                        game.getGameInterface().addEntity(projectile);
-                    }
-                }
+                updateHuman(tile, elapsedTime, row, col);
+
                 // make all the aliens move
-                int i = 0;
-                while (i < tile.aliens.size()) {
-                    Alien alien = tile.aliens.get(i);
-                    alien.updateSpeed(); // Update the Alien's speed (considering IceLaser effect)
+                hpLost = updateAliens(tile, elapsedTime, row, col);
 
-                    if (tile.human != null && collision.isHumanHittingAlien(tile.human, alien)){
-                        alien.reload(elapsedTime);
-                        i++;
-                        continue;
-                    }
-                    alien.move(); // Modify the move method to take speed into account
-                    // if an Alien's position is negative it means it breached the Human's defense and
-                    // one HP should be deducted from the player's HP
-                    if (alien.getxPos() < 0) {
-                        hpLost++;
-                        tile.aliens.remove(alien);
-                        game.getGameInterface().removeEntity(alien);
-                    }
-                    // if an Alien's position is less than it should be given its current tile, we remove it
-                    // we move it to the tile on the left
-                    else if (alien.getxPos() < col * 100) {
-                        tile.aliens.remove(alien);
-                        tiles[row][col - 1].aliens.add(alien);
-                    } else {
-                        i++;
-                    }
-                }
                 // make all the projectiles move
-                int j = 0;
-                while (j < tile.projectiles.size()) {
-                    Projectile projectile = tile.projectiles.get(j);
-                    projectile.move();
-
-                    if (projectile.getxPos() >= 800) {
-                        removeEntity(projectile);
-                    }
-                    // if a projectile has crossed a tile boundary, move it to the next tile, eventually,
-                    // all projectiles should maybe be stored as a single list for each row, not each Tile, although
-                    // it might be fine as is
-                    else if (projectile.getxPos() >= (col + 1) * 100) {
-                        tile.projectiles.remove(projectile);
-                        tiles[row][col + 1].projectiles.add(projectile);
-                    } else {
-                        j++;
-                    }
-                }
+                updateProjectiles(tile, elapsedTime, row, col);
             }
         }
         return hpLost;
     }
 
+    public int updateAliens(Tile tile, int elapsedTime, int row, int col){
+        int hpLost = 0;
+        int i = 0;
+        while (i < tile.aliens.size()) {
+            Alien alien = tile.aliens.get(i);
+            alien.updateSpeed(); // Update the Alien's speed (considering IceLaser effect)
+
+            if (tile.human != null && collision.isHumanHittingAlien(tile.human, alien)){
+                alien.reload(elapsedTime);
+                i++;
+                continue;
+            }
+            alien.move(); // Modify the move method to take speed into account
+            // if an Alien's position is negative it means it breached the Human's defense and
+            // one HP should be deducted from the player's HP
+            if (alien.getxPos() < 0) {
+                hpLost++;
+                tile.aliens.remove(alien);
+                game.getGameInterface().removeEntity(alien);
+            }
+            // if an Alien's position is less than it should be given its current tile, we remove it
+            // we move it to the tile on the left
+            else if (alien.getxPos() < col * 100) {
+                tile.aliens.remove(alien);
+                tiles[row][col - 1].aliens.add(alien);
+            } else {
+                i++;
+            }
+        }
+        return hpLost;
+    }
+    public void updateHuman(Tile tile, int elapsedTime, int row, int col){
+        if (tile.human != null) {
+            tile.human.reload(elapsedTime);
+            if (tile.human.getReloadTimeRemaining() <= 0 & (!noAlien(row))) {
+                Projectile projectile = tile.human.attack();
+                tile.projectiles.add(projectile);
+                game.getGameInterface().addEntity(projectile);
+            }
+        }
+    }
+
+    public void updateProjectiles(Tile tile, int elapsedTime, int row, int col){
+        int j = 0;
+        while (j < tile.projectiles.size()) {
+            Projectile projectile = tile.projectiles.get(j);
+            projectile.move();
+
+            if (projectile.getxPos() >= 800) {
+                removeEntity(projectile);
+            }
+            // if a projectile has crossed a tile boundary, move it to the next tile, eventually,
+            // all projectiles should maybe be stored as a single list for each row, not each Tile, although
+            // it might be fine as is
+            else if (projectile.getxPos() >= (col + 1) * 100) {
+                tile.projectiles.remove(projectile);
+                tiles[row][col + 1].projectiles.add(projectile);
+            } else {
+                j++;
+            }
+        }
+    }
 
     public boolean noAlien(){
         for (int row = 0; row < height; row++){
