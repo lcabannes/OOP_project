@@ -9,11 +9,11 @@ import java.io.File;
 import java.io.IOException;
 
 public class Bomb extends Projectile{
-    // the hps of a bullet is how many times it can collide before dying
+    // hps of a bullet is how many times it can collide before dying
     private static BufferedImage classIcon;
     private static final int length = 50;
     private static final int height = 25;
-    // this initialization block, like all the others, tries to find the image corresponding to the laser
+
     static {
         try{
             Bomb.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().

@@ -114,6 +114,7 @@ public class GameInterface extends JFrame{
         }
     }
 
+    // Method to load image when game won
     private void loadWinImage() {
         try {
             String path = GameInterface.class.getProtectionDomain().
@@ -121,8 +122,8 @@ public class GameInterface extends JFrame{
             BufferedImage originalImage = ImageIO.read(new File(path));
 
             // Desired dimensions
-            int desiredWidth = 800; // Change this to your desired width
-            int desiredHeight = 600; // Change this to your desired height
+            int desiredWidth = 800;
+            int desiredHeight = 600;
 
             // Resize the image while maintaining aspect ratio
             Image resizedImage = originalImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
@@ -137,7 +138,7 @@ public class GameInterface extends JFrame{
         }
     }
 
-
+    // Method to load image when game lose
     private void loadLoseImage() {
         try {
             String path = GameInterface.class.getProtectionDomain().
@@ -148,6 +149,7 @@ public class GameInterface extends JFrame{
         }
     }
 
+    // Method to display win/lose image when game ends
     public void displayEndGameImage(boolean isWin) {
         loadWinImage();
         loadLoseImage();
@@ -170,7 +172,7 @@ public class GameInterface extends JFrame{
         }
     }
 
-
+    // Method to set game info panel
     public JPanel initializeGameInfoPanel(){
         JPanel gameInfoPanel = new JPanel();
         gameInfoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -199,6 +201,8 @@ public class GameInterface extends JFrame{
         gameInfoPanel.add(goldLabel);
         return gameInfoPanel;
     }
+
+    // Method to set all buttons in game window
     public void initializeSelectionButtons(){
         for (int xpos = 0; xpos<Board.length; xpos++){
             Entity selectionButton = null;
@@ -246,6 +250,7 @@ public class GameInterface extends JFrame{
         displayedEntities.add(entity);
     }
 
+    // Method to handle mouse event with button panel
     public void initializeButtonPanel(){
         for (int i=0; i< Board.height+1; i++){
             for (int j=0; j<Board.length; j++){
@@ -418,6 +423,7 @@ public class GameInterface extends JFrame{
         }
     }
 
+    // Keep updating game info during the game
     public void updateGameInfo(int wave, int hp, int gold) {
         waveLabel.setText("Wave: " + wave);
         hpLabel.setText("HP: " + hp);
@@ -435,7 +441,7 @@ public class GameInterface extends JFrame{
         addCostLabelForButton(new Upgrade(game.getBoard()), 5);
     }
 
-    // Create cost label for each human or upgrade button
+    // Create cost label for each human, upgrade, undeploy button
     private void addCostLabelForButton(Object object, int buttonPosition) {
         int goldCost;
         String labelText;
@@ -459,7 +465,7 @@ public class GameInterface extends JFrame{
         costLabel.setForeground(Color.WHITE); // Set the text color
 
         int labelWidth = TILESIZE;
-        int labelHeight = 30; // Adjust as needed
+        int labelHeight = 30;
         int labelX = buttonPosition * TILESIZE + 20;
         int labelY = TILESIZE - labelHeight + 20; // Position under the button
 

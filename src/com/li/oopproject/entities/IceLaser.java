@@ -22,7 +22,7 @@ public class IceLaser extends Projectile{
     private static final int length = 50;
     private static final int height = 25;
     private final static BufferedImage classIcon;
-    // this initialization block, like all the others, tries to find the image corresponding to the laser
+
     static {
         BufferedImage classIcon1;
         String path = GameInterface.class.getProtectionDomain().

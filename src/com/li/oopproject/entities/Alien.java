@@ -8,7 +8,7 @@ public abstract class Alien extends Entity implements Mobile, Attacks{
     private float currentSpeed;     // The current speed, which may be reduced
     private long speedReductionEndTime; // Time when speed reduction ends
 
-    public Alien(int hp, int damage, Board board, int normalSpeed, int reloadTime){ // aliens all move so they have a speed
+    public Alien(int hp, int damage, Board board, int normalSpeed, int reloadTime){
         super(hp, damage, board);
         this.reloadTimeRemaining = reloadTime;
         this.reloadTime = reloadTime;

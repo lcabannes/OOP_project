@@ -48,7 +48,7 @@ public class GhostBuster extends Human{
     @Override
     public void upgrade(){
         super.upgrade();
-        setDamage(getDamage() * 3);
+        setDamage(getDamage() * 3); // 3 times damage if GhostBuster is upgraded
         System.out.println(this.getDamage());
         setInstanceIcon(upgradedClassIcon);
     }

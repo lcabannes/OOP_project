@@ -23,8 +23,8 @@ public class GoldSystem  {
         return gold;
     }
 
+    // Different alien return different amount of gold
     int getGoldForAlienType(Alien alien) {
-        // Example: Different gold amounts for different alien types
         if (gold > 10000){
             return 0;
         }
