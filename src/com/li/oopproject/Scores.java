@@ -9,11 +9,13 @@ public class Scores implements Serializable {
     private LinkedList<Integer> portal_board_scores;
     private static int MAX_SIZE = 10;
 
+    // Initialize two list for scores of two maps
     public Scores(){
         default_board_scores = new LinkedList<Integer>();
         portal_board_scores = new LinkedList<Integer>();
     }
 
+    // Getter to get best scores
     public int getBest(){
         if (default_board_scores.isEmpty() || portal_board_scores.isEmpty()){
             if (!portal_board_scores.isEmpty()){

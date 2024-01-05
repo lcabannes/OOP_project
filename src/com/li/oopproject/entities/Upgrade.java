@@ -14,7 +14,7 @@ public class Upgrade extends Consumable {
     private static final int length = 80;
     private static final int height = 80;
     private final static BufferedImage classIcon;
-    // this initialization block, like all the others, tries to find the image corresponding to the laser
+
     static {
         BufferedImage classIcon1;
         String path = GameInterface.class.getProtectionDomain().

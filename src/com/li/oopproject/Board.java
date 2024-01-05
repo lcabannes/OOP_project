@@ -38,7 +38,8 @@ public class Board {
         return this.tiles;
     }
 
-    public class Tile { // Tile local class is aggregated by a Board, a tile contains at most 1 human and possibly many Aliens
+    // Tile local class is aggregated by a Board, a tile contains at most 1 human and possibly many Aliens
+    public class Tile {
         ArrayList<Alien> aliens;
         Human human;
         ArrayList<Projectile> projectiles;
@@ -116,7 +117,6 @@ public class Board {
     public Alien spawnAlien(String alienName, int yposition, int xposition) {
         Alien newAlien;
         switch (alienName) {
-            // Spawn different type of Aliens
             case "DefaultAlien":
                 newAlien = new DefaultAlien(this);
                 break;
@@ -129,7 +129,7 @@ public class Board {
             case "AlienShip":
                 newAlien = new AlienShip(this);
                 break;
-            case "BossAlien":
+            case "BossAlien": // Boss has different hp value for different game modes
                 newAlien = new BossAlien(this, game.getBossHP());
                 break;
             default:
@@ -142,7 +142,7 @@ public class Board {
         return newAlien;
     }
 
-    // check each tile, if it has aliens then print "A"
+    // check each tile, if it has aliens then print "A"， if it has human, print "H"
     public void display() {
         System.out.println("Current Board:");
         for (int row = 0; row < Board.height; row++) {

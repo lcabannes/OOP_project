@@ -64,6 +64,7 @@ public class Menu extends JFrame {
         setVisible(true);
     }
 
+    // Drop down for default and portal board, two maps
     public JComboBox<String> initBoardDropdown(){
         String[] boards = {"default board", "portal board"};
         if (bestScores.getBest() <= UNLOCK_BOARD_LEVEL){
@@ -90,8 +91,8 @@ public class Menu extends JFrame {
         return boardDropdown;
     }
 
+    // Create a dropdown for game modes
     public JComboBox<String> initModeDropDown(String[] gameModes){
-        // Create a dropdown for game modes
         JComboBox<String> modeDropdown = new JComboBox<>(gameModes);
         modeDropdown.addActionListener(new ActionListener() {
             @Override
@@ -116,6 +117,8 @@ public class Menu extends JFrame {
         });
         return modeDropdown;
     }
+
+    // Method for best score ranking
     public void loadScores(){
         String filePath = GameInterface.class.getProtectionDomain().
                 getCodeSource().getLocation().getPath() + "com/li/oopproject/bestScores.ser";
@@ -132,6 +135,8 @@ public class Menu extends JFrame {
         }
 
     }
+
+    // Game start with selected mode
     private void startGame() {
         System.out.println("Game is starting in mode: " + selectedMode);
         Main.startGame(selectedMode, selectedBoard, bestScores); // Pass the selected mode to the game
@@ -153,6 +158,7 @@ public class Menu extends JFrame {
         return file.exists() && !file.isDirectory();
     }
 
+    // Display scores records based on maps
     public void displayScores() {
 
         StringBuilder sb = new StringBuilder();

@@ -72,6 +72,7 @@ public class Collision {
     // Method to handle the impact of a projectile on an alien
     protected void handleProjectileAlienImpact(Projectile projectile, Alien alien) {
         alien.reduceHp(projectile.getDamage());
+        // IceLaser has special slow down effect, reduce alien speed
         if (projectile instanceof IceLaser iceLaser) {
             alien.reduceSpeed(iceLaser.getSlowdownEffect(), iceLaser.getSlowdownDuration());
         }

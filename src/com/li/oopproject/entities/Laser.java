@@ -17,7 +17,7 @@ public class Laser extends Projectile{
     private static final int length = 50;
     private static final int height = 25;
     final static BufferedImage classIcon;
-    // this initialization block, like all the others, tries to find the image corresponding to the laser
+
     static {
         BufferedImage classIcon1;
         String path = GameInterface.class.getProtectionDomain().

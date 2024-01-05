@@ -13,7 +13,7 @@ public class Bullet extends Projectile{
     private static BufferedImage classIcon;
     private static final int length = 50;
     private static final int height = 25;
-    // this initialization block, like all the others, tries to find the image corresponding to the laser
+
     static {
         try{
             Bullet.classIcon = ImageIO.read(new File(GameInterface.class.getProtectionDomain().

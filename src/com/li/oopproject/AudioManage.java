@@ -28,11 +28,4 @@ public class AudioManage {
         }
     }
 
-    // Later for mute button
-    public void stopBGMusic() {
-        if (clip != null) {
-            clip.stop();
-            clip.close();
-        }
-    }
 }

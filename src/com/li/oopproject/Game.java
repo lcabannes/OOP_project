@@ -100,7 +100,6 @@ public class Game {
         return this.hp <= 0;
     }
     public boolean isGameWon(){
-        // The game is won if it's the final wave, the boss has spawned, and the boss alien is not alive
         return currentWave == waveNum +1;
     }
     public void startGame(){
@@ -126,6 +125,7 @@ public class Game {
         baseTimer.start(); // create a base clock that will update the game state every TICKDELAY milliseconds
     }
 
+    // Method to spawn only one boss alien from the middle row of board
     public void spawnBoss(){
         int middleX = Board.length; // Assuming Board.length is the width of the board
         int middleY = Board.height / 2 - 1; // Assuming Board.height is the height of the board
@@ -133,8 +133,9 @@ public class Game {
         gameInterface.addEntity(bossAlien);
         this.boss = bossAlien;
     }
+
+    // Method to spawn alien when game start
     public void spawnAlien() {
-        // Only spawn the boss in the final wave
         Random randomInt = new Random();
         int ySpawnPosition = randomInt.nextInt(Board.height);
         int xSpawnPosition = Board.length;
@@ -146,6 +147,7 @@ public class Game {
 
     }
 
+    // Method to deduct gold when placing human on board
     public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem){
 
         if (board.placeHuman(human, row, col, goldSystem)){
@@ -204,7 +206,6 @@ public class Game {
 
                 if (currentWave > waveNum) {
                     System.out.println("All waves completed!");
-                    // Additional code for game completion
                 }
             }
         }
