@@ -142,7 +142,7 @@ public class Board {
         return newAlien;
     }
 
-    // check each tile, if it has aliens then print "A"， if it has human, print "H"
+    // check each tile, if it has aliens then print "A", if it has human, print "H"
     public void display() {
         System.out.println("Current Board:");
         for (int row = 0; row < Board.height; row++) {
