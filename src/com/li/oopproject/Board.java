@@ -176,7 +176,7 @@ public class Board {
                 updateHuman(tile, elapsedTime, row, col);
 
                 // make all the aliens move
-                hpLost = updateAliens(tile, elapsedTime, row, col);
+                hpLost += updateAliens(tile, elapsedTime, row, col);
 
                 // make all the projectiles move
                 updateProjectiles(tile, elapsedTime, row, col);
