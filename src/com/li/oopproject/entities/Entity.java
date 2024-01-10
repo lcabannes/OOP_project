@@ -16,6 +16,9 @@ public abstract class Entity {
     private int height = 80;
     public void setInstanceIcon(BufferedImage Icon) {
         this.instanceIcon = Icon;
+        if (Icon != damagedIcon){
+            prevInstanceIcon = instanceIcon;
+        }
     }
     private BufferedImage instanceIcon; // each entity has its own current icon
     private BufferedImage prevInstanceIcon;
