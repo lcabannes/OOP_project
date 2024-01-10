@@ -213,7 +213,7 @@ public class Game {
 
     public void launchNewWave(){
 
-        if (currentWave == waveNum) {
+        if (currentWave == waveNum || currentWave >= 7) {
             // Logic for the final wave
             spawnBoss(); // Spawn the boss alien
         }
@@ -250,7 +250,7 @@ public class Game {
                 break;
             default:
                 if (AlienSpawner.getDelay() > 100) {
-                    AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
+                    AlienSpawner.setDelay(AlienSpawner.getDelay() - 50);
                 }
         }
         AlienSpawner.start();
