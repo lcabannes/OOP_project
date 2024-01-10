@@ -100,7 +100,7 @@ public class Game {
         return this.hp <= 0;
     }
     public boolean isGameWon(){
-        return currentWave == waveNum +1;
+        return (currentWave == waveNum +1 && (!isGameOver()));
     }
     public void startGame(){
         System.out.println("Game Starting");
@@ -114,7 +114,7 @@ public class Game {
                     if (isGameOver()){
                         System.out.println("You lost!");
                     }
-                    if (isGameWon()){
+                    else if (isGameWon()){
                         System.out.println("you won!!!");
                     }
                     bestScores.insertScore(currentWave-1, board.getBoardType());
