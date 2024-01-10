@@ -404,7 +404,8 @@ public class GameInterface extends JFrame{
                 //place it at its current position + some offset so that it appears in the middle of the tile
                 imageLabel.setBounds((int)(entity.getxPos())+10, entity.getyPos()+TILESIZE+15, entityIcon.getWidth(), entityIcon.getHeight());
             } else {
-                System.out.println("Failed to load the image.");
+                System.out.println("Failed to Entity load the image.");
+              //  System.exit(1);
             }
             i++;
         }
