@@ -5,10 +5,7 @@ import com.li.oopproject.entities.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +35,6 @@ public class GameInterface extends JFrame{
         // use a layered Pane to deal with the different layers of panels
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WINDOWLENGTH, WINDOWHEIGHT));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         initializeSelectionButtons();
@@ -85,15 +81,28 @@ public class GameInterface extends JFrame{
 
         this.add(layeredPane);
         setResizable(false);
+        // set
+        setSpecialCloseOperation();
 
-        // Play bgmusic just before showing the screen
-        AudioManage audioManage = new AudioManage();
-        audioManage.loadBGMusic();
 
         setVisible(true);
 
     }
 
+    public void setSpecialCloseOperation(){
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                game.getBaseTimer().stop();
+                System.out.println("game exited");
+                dispose();
+                // Optionally, you can still call System.exit or dispose the frame
+                // System.exit(0); // to exit the application
+                // frame.dispose(); // to just close the window
+            }
+        });
+    }
     public void loadBackgroundImage(){
         try {
             String path = "";
@@ -404,7 +413,8 @@ public class GameInterface extends JFrame{
                 //place it at its current position + some offset so that it appears in the middle of the tile
                 imageLabel.setBounds((int)(entity.getxPos())+10, entity.getyPos()+TILESIZE+15, entityIcon.getWidth(), entityIcon.getHeight());
             } else {
-                System.out.println("Failed to load the image.");
+                System.out.println("Failed to Entity load the image.");
+              //  System.exit(1);
             }
             i++;
         }

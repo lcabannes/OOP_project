@@ -37,6 +37,7 @@ public class Game {
     private final Scores bestScores;
     private Alien boss = null;
     private int bossHP;
+    private Timer baseTimer;
 
 
     public Board getBoard() {
@@ -100,12 +101,12 @@ public class Game {
         return this.hp <= 0;
     }
     public boolean isGameWon(){
-        return currentWave == waveNum +1;
+        return (currentWave == waveNum +1 && (!isGameOver()));
     }
     public void startGame(){
         System.out.println("Game Starting");
 
-        Timer baseTimer = new Timer(TICKDELAY, new ActionListener() {
+        baseTimer = new Timer(TICKDELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateGame();
@@ -114,7 +115,7 @@ public class Game {
                     if (isGameOver()){
                         System.out.println("You lost!");
                     }
-                    if (isGameWon()){
+                    else if (isGameWon()){
                         System.out.println("you won!!!");
                     }
                     bestScores.insertScore(currentWave-1, board.getBoardType());
@@ -146,7 +147,6 @@ public class Game {
         gameInterface.addEntity(alien);
 
     }
-
     // Method to deduct gold when placing human on board
     public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem){
 
@@ -168,7 +168,12 @@ public class Game {
             objectOutputStream.writeObject(bestScores);
             System.out.println(bestScores.getBest());
 
-            System.out.println("Scores saved to " + filePath);
+            if (VERBOSE){
+                System.out.println("Scores saved to " + filePath);
+            }
+            else{
+                System.out.println("Scores saved");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -212,8 +217,7 @@ public class Game {
     }
 
     public void launchNewWave(){
-
-        if (currentWave == waveNum) {
+        if (currentWave == waveNum || currentWave >= 7) {
             // Logic for the final wave
             spawnBoss(); // Spawn the boss alien
         }
@@ -250,7 +254,7 @@ public class Game {
                 break;
             default:
                 if (AlienSpawner.getDelay() > 100) {
-                    AlienSpawner.setDelay(AlienSpawner.getDelay() - 100);
+                    AlienSpawner.setDelay(AlienSpawner.getDelay() - 50);
                 }
         }
         AlienSpawner.start();
@@ -258,6 +262,9 @@ public class Game {
 
     }
 
+    public Timer getBaseTimer() {
+        return baseTimer;
+    }
 
     // Getter for bossHP
     public int getBossHP() {

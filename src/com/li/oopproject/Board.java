@@ -191,7 +191,7 @@ public class Board {
         while (i < tile.aliens.size()) {
             Alien alien = tile.aliens.get(i);
             alien.updateSpeed(); // Update the Alien's speed (considering IceLaser effect)
-
+            alien.resetIcon(elapsedTime);
             if (tile.human != null && collision.isHumanHittingAlien(tile.human, alien)){
                 alien.reload(elapsedTime);
                 i++;
@@ -219,6 +219,7 @@ public class Board {
     public void updateHuman(Tile tile, int elapsedTime, int row, int col){
         if (tile.human != null) {
             tile.human.reload(elapsedTime);
+            tile.human.resetIcon(elapsedTime);
             if (tile.human.getReloadTimeRemaining() <= 0 & (!noAlien(row))) {
                 Projectile projectile = tile.human.attack();
                 tile.projectiles.add(projectile);
@@ -232,7 +233,7 @@ public class Board {
         while (j < tile.projectiles.size()) {
             Projectile projectile = tile.projectiles.get(j);
             projectile.move();
-
+            projectile.resetIcon(elapsedTime);
             if (projectile.getxPos() >= 800) {
                 removeEntity(projectile);
             }

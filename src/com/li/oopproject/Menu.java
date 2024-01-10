@@ -18,6 +18,9 @@ public class Menu extends JFrame {
     public final int UNLOCK_BOARD_LEVEL = 5;
 
     public Menu() {
+        // Play bgmusic just before showing the menu
+        AudioManage audioManage = new AudioManage();
+        audioManage.loadBGMusic();
         loadScores();
 
         // Create a main panel
@@ -33,7 +36,7 @@ public class Menu extends JFrame {
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+             //   dispose();
                 startGame();
             }
         });
@@ -44,6 +47,8 @@ public class Menu extends JFrame {
         bestScoresButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                loadScores();
                 displayScores();
             }
         });
