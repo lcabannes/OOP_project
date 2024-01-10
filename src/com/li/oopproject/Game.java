@@ -147,7 +147,6 @@ public class Game {
         gameInterface.addEntity(alien);
 
     }
-
     // Method to deduct gold when placing human on board
     public boolean placeHuman(Human human, int row, int col, GoldSystem goldSystem){
 

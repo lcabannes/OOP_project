@@ -15,11 +15,10 @@ public abstract class Entity {
     private int length = 80;
     private int height = 80;
     public void setInstanceIcon(BufferedImage Icon) {
+      //  prevInstanceIcon = instanceIcon;
         this.instanceIcon = Icon;
-        if (Icon != damagedIcon){
-            prevInstanceIcon = instanceIcon;
-        }
     }
+    private boolean isDamaged = false;
     private BufferedImage instanceIcon; // each entity has its own current icon
     private BufferedImage prevInstanceIcon;
     public static final BufferedImage damagedIcon; // each entity has its own current icon
@@ -63,10 +62,13 @@ public abstract class Entity {
     }
 
     public void resetIcon(int timeElapsed){
-        timeUntilReset -=  timeElapsed;
-        if (timeUntilReset <= 0){
-            timeUntilReset = 60;
-            setInstanceIcon(prevInstanceIcon);
+        if(isDamaged){
+            timeUntilReset -=  timeElapsed;
+            if (timeUntilReset <= 0){
+                setInstanceIcon(prevInstanceIcon);
+                isDamaged = false;
+                prevInstanceIcon = null;
+            }
         }
     }
 
@@ -96,8 +98,13 @@ public abstract class Entity {
 
     // Method to reduce hp
     public void reduceHp(int amount) {
-        this.prevInstanceIcon = this.instanceIcon;
-        this.instanceIcon = Entity.damagedIcon;
+        this.timeUntilReset = 60;
+        isDamaged = true;
+        if (getInstanceIcon() != damagedIcon)
+        {
+            this.prevInstanceIcon = this.instanceIcon;
+            this.instanceIcon = Entity.damagedIcon;
+        }
         this.hp -= amount;
         if (hp <= 0) {
             board.removeEntity(this);
