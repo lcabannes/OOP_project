@@ -8,9 +8,6 @@ import com.li.oopproject.entities.*;
 public class Board {
     private int boardType;
     Tile[][] tiles = new Tile[height][length];
-    private Tile entrance;
-    private Tile exit;
-    private Human human;
     public static final int length = 8; // fixed length for all Boards
     public static final int height = 5; // fixed height for all board
     private final Game game;
@@ -177,6 +174,7 @@ public class Board {
 
                 // make all the aliens move
                 hpLost += updateAliens(tile, elapsedTime, row, col);
+
 
                 // make all the projectiles move
                 updateProjectiles(tile, elapsedTime, row, col);
